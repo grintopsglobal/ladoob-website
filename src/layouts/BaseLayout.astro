@@ -6,7 +6,7 @@ import Icon from '../components/Icon.astro';
 import SEO from '../components/SEO.astro';
 import Tracking from '../components/Tracking.astro';
 import type { Lang } from '../i18n/ui';
-import { useTranslations, pathWithoutLang } from '../i18n/utils';
+import { pathWithoutLang } from '../i18n/utils';
 import { withBase } from '../lib/url';
 import { waLink } from '../lib/wa';
 import { byLang, getPage, getSettings, isi } from '../lib/content';
@@ -27,7 +27,6 @@ interface Props {
 const { lang, home = false, type, jsonLd, noindex } = Astro.props;
 const here = pathWithoutLang(Astro.url);
 const alternates = Astro.props.alternates ?? ({ id: here } as Record<Lang, string>);
-const t = useTranslations(lang);
 const settings = await getSettings(lang);
 const page = await getPage(lang, 'home');
 const pilar = await byLang('pilar', lang);
@@ -57,7 +56,7 @@ const fonts = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;7
   </head>
   <body class="bg-white text-slate-800 antialiased selection:bg-ladoob-navy selection:text-white">
     <Tracking tracking={settings.tracking} part="body" />
-    <Header lang={lang} home={home} menu={page.menu} ctaLabel={page.labelCta} ctaHref={wa(settings.pesanWa.umum)} />
+    <Header lang={lang} home={home} menu={page.menu} ctaLabel={page.labelCtaHeader} ctaHref={wa(settings.pesanWa.umum)} />
 
     <main class="pt-[80px]" style="overflow-x: clip;">
       <slot />
@@ -72,6 +71,7 @@ const fonts = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;7
       tautan={page.tautanFooter}
       email={settings.email}
       whatsapp={settings.whatsapp}
+      pesanWa={settings.pesanWa.footer}
       copyright={isi(settings.copyright, { tahun: String(new Date().getFullYear()) })}
       taglineFooter={settings.taglineFooter}
     />
@@ -80,11 +80,11 @@ const fonts = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;7
       href={wa(settings.pesanWa.melayang)}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={t('wa.floating')}
+      aria-label={`${page.labelCtaHeader} via WhatsApp`}
       class="sm:hidden fixed bottom-4 right-4 z-40 inline-flex items-center gap-2 bg-ladoob-agent hover:bg-[#164237] text-white font-semibold px-4 py-3 rounded-full shadow-lg transition-colors"
     >
       <Icon name="message-circle" class="w-5 h-5 text-emerald-300" />
-      <span class="text-sm">{page.labelCta}</span>
+      <span class="text-sm">{page.labelCtaHeader}</span>
     </a>
   </body>
 </html>

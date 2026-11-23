@@ -68,7 +68,7 @@ scripts/bandingkan-mockup.mjs  Perbandingan visual mockup vs hasil build (lihat 
 DESIGN.md                      Arah desain: dial, warna, tipografi, motif
 docs/inventaris-konten.md      Inventaris teks mockup asli, peta ke field CMS, dan keputusan pemilik
 docs/revisi-copy.md            Daftar perubahan copy saat redesain (sebelum dan sesudah)
-referensi/                     Mockup, logo, screenshot (cadangan, tidak dipakai di situs)
+referensi/mockup/              Mockup asli (acuan desain dan bahan scripts/bandingkan-mockup.mjs)
 ```
 
 ## Membandingkan dengan mockup
@@ -170,14 +170,14 @@ Semua teks beranda ada di CMS:
 
 | Yang diubah | Koleksi CMS |
 |---|---|
-| Menu, label tombol WhatsApp, hero, judul tiap section, metrik & poin Manfaat, catatan harga, banner bawah, tautan footer | Halaman: Beranda |
+| Menu, label tombol header ("Coba Sekarang") dan tombol lain ("Jadwalkan Demo"), label tombol harga ("Pilih Ini Sekarang"), hero, judul tiap section, metrik & poin Manfaat, catatan harga, banner bawah, tautan footer | Halaman: Beranda |
 | Empat produk (tab dan panel) | Produk (4 aplikasi) |
 | Paket harga (pesan WA tiap paket otomatis ikut harga) | Paket Harga |
 | FAQ (nomor urut otomatis) | FAQ |
 | Artikel (3 terbaru tampil di beranda, semua di `/id/blog/`) | Blog |
 | Nomor WA, email, footer, atribusi, SEO, pesan WhatsApp, klaim, tracking | Pengaturan Situs |
 
-- **Pesan WhatsApp** punya placeholder: `{nama}` (nama produk atau paket), `{harga}` (paket), `{tahun}` (copyright).
+- **Pesan WhatsApp** diatur per lokasi di Pengaturan Situs > Pesan WhatsApp (header, tombol melayang, hero, panel produk, paket, artikel, ajakan bawah, kontak footer). Placeholder: `{nama}` (nama produk atau paket), `{harga}` (paket), `{tahun}` (copyright). Kata "Grintec" pertama di copyright otomatis menjadi tautan ke grintecs.com.
 - **Paragraf hero:** nama produk yang ditebalkan (`**Ladoob Core**`) otomatis diberi warna produknya.
 - **Artikel baru:** isi *Slug URL* (huruf kecil dan tanda hubung). Mengubah slug artikel yang sudah tayang membuat URL lama 404. Artikel `draft` tidak tampil.
 - **Gambar:** unggah sekitar 1600 px, WebP, di bawah 200 KB.
@@ -191,7 +191,7 @@ Semua teks beranda ada di CMS:
 | Bukti tiap klaim | Pengaturan Situs > Klaim yang perlu diverifikasi |
 | Gambar OG 1200x630 | Pengaturan Situs > SEO > Gambar OG |
 | URL Worker OAuth | `base_url` di `public/admin/config.yml` |
-| Konfirmasi logo resmi | Situs memakai logo SVG dari mockup; `referensi/logo/Ladoob_logo.jpg` berbeda desainnya |
+| Konfirmasi logo resmi | Situs memakai logo SVG dari mockup; logo JPG resmi (dihapus dari repo 23 November 2026, ada di riwayat git commit `5532aa5`) berbeda desainnya |
 | Isi lengkap 3 artikel | Saat ini sama dengan ringkasan baca cepat di mockup; kembangkan di CMS |
 
 Tidak ada testimoni, logo klien, atau angka statistik yang dikarang.

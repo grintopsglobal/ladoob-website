@@ -10,11 +10,11 @@ Disusun dari jawaban pemilik pada 22 November 2026. Referensi tetap mockup `refe
 
 ## Dial
 
-`Dial: ENERGY 1 / RHYTHM 2 / MOTION 1`
+`Dial: ENERGY 1 / RHYTHM 2 / MOTION 2`
 
 - ENERGY 1: ruang putih lega, satu titik fokus per layar, tanpa dekorasi latar.
-- RHYTHM 2: kerangka kiri-rata yang konsisten, dengan variasi komposisi pada Fitur (tab vertikal + panel), Manfaat (narasi + daftar), FAQ (judul kiri, daftar kanan).
-- MOTION 1: hanya hover dan fokus, serta transisi buka-tutup accordion dan tab. Tanpa animasi melayang atau berdenyut.
+- RHYTHM 2: kerangka kiri-rata yang konsisten, dengan variasi komposisi pada Fitur (tab vertikal + panel), Manfaat (narasi + kartu 2x2), FAQ (judul kiri, daftar kanan).
+- MOTION 2: hover, fokus, transisi accordion dan tab, serta animasi melayang halus pada visual hero (permintaan pemilik 23 November 2026; override R-19, nilai dari mockup, berhenti saat hover dan untuk *reduced motion*). Tanpa animasi lain.
 
 ## Warna
 
@@ -35,7 +35,13 @@ Warna produk tidak dipakai untuk latar section, angka, atau dekorasi.
 ## Bentuk dan elevasi
 
 - Radius: tombol 8 px, kartu 12 px, bingkai visual produk 16 px.
-- Shadow hanya pada visual produk di hero (satu-satunya elemen yang "terangkat"). Elemen lain memakai garis 1 px.
+- Shadow pada visual produk di hero dan saat kartu Manfaat di-hover (penanda interaksi). Elemen lain memakai garis 1 px.
+
+## Keputusan pemilik 23 November 2026
+
+- Tombol header dan tombol melayang: "Coba Sekarang" (override R-15). Tombol harga: "Pilih Ini Sekarang". Tombol lain tetap "Jadwalkan Demo".
+- Poin Manfaat memakai kartu berbingkai yang merespons hover, seperti mockup.
+- "Grintec" di footer ditautkan ke grintecs.com (tab baru).
 
 ## Motif identitas
 
@@ -43,7 +49,7 @@ Heksagon dari logo, dipakai kecil sebagai penanda tiap produk (tab pilar, ilustr
 
 ## Visual produk
 
-Ilustrasi layar aplikasi yang bersih, diberi keterangan "Contoh tampilan". Akan diganti screenshot asli bila tim memotret ulang aplikasi dengan brand Ladoob. Screenshot di `referensi/screenshot/` memuat brand klien (ByteTrip, sjg.com) dan tidak dipakai.
+Ilustrasi layar aplikasi yang bersih, diberi keterangan "Contoh tampilan". Akan diganti screenshot asli bila tim memotret ulang aplikasi dengan brand Ladoob. Screenshot lama memuat brand klien (ByteTrip, sjg.com), tidak dipakai, dan sudah dihapus dari repo.
 
 ## Copy
 

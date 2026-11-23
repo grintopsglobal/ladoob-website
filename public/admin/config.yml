@@ -183,7 +183,8 @@ collections:
         fields:
           - { label: Label, name: label, widget: string, i18n: true }
           - { label: Tujuan, name: anchor, widget: select, options: *anchor, i18n: duplicate }
-      - { label: Label tombol WhatsApp (semua CTA), name: labelCta, widget: string, i18n: true }
+      - { label: Label tombol WhatsApp (hero, produk, artikel, ajakan bawah), name: labelCta, widget: string, i18n: true }
+      - { label: Label tombol header dan tombol melayang, name: labelCtaHeader, widget: string, i18n: true }
       - label: Hero
         name: hero
         widget: object
@@ -225,6 +226,7 @@ collections:
           - { label: Judul, name: judul, widget: string, i18n: true }
           - { label: Deskripsi, name: deskripsi, widget: text, i18n: true, hint: *tebal }
           - { label: Catatan di bawah paket, name: catatan, widget: text, i18n: true, hint: *tebal }
+          - { label: Label tombol tiap paket, name: labelCta, widget: string, i18n: true }
       - { label: Section Blog, name: blog, widget: object, i18n: true, fields: *judulSection }
       - { label: Section FAQ, name: faq, widget: object, i18n: true, fields: *judulSection }
       - label: Ajakan demo (bawah)
@@ -275,13 +277,14 @@ collections:
         widget: object
         i18n: true
         fields:
-          - { label: Header, name: umum, widget: string, i18n: true }
+          - { label: Header dan menu mobile, name: umum, widget: string, i18n: true }
           - { label: Tombol melayang, name: melayang, widget: string, i18n: true }
           - { label: Hero, name: hero, widget: string, i18n: true }
           - { label: Banner bawah, name: banner, widget: string, i18n: true }
           - { label: Modal & halaman artikel, name: artikel, widget: string, i18n: true }
           - { label: Panel produk, name: pilar, widget: string, i18n: true, hint: '{nama} diganti nama produk.' }
           - { label: Paket harga, name: paket, widget: string, i18n: true, hint: '{nama} dan {harga} diganti dari data paket.' }
+          - { label: Kontak WhatsApp di footer, name: footer, widget: string, i18n: true }
       - label: Klaim yang perlu diverifikasi
         name: klaim
         widget: list

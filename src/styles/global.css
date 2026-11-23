@@ -66,9 +66,29 @@
   }
 }
 
+/* Animasi melayang di visual hero: permintaan pemilik (23 November 2026), nilai persis mockup.
+   Berhenti saat kursor di atasnya dan mati total untuk prefers-reduced-motion. */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes floatMedium {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-9px); }
+}
+@keyframes floatDelayed {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float-slow { animation: floatSlow 5.5s ease-in-out infinite; }
+.animate-float-medium { animation: floatMedium 4.8s ease-in-out 0.8s infinite; }
+.animate-float-delayed { animation: floatDelayed 5.2s ease-in-out 1.6s infinite; }
+.animate-float-slow:hover, .animate-float-medium:hover, .animate-float-delayed:hover { animation-play-state: paused; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .faq-content, .faq-chevron { transition: none !important; }
+  .animate-float-slow, .animate-float-medium, .animate-float-delayed { animation: none; }
 }
 
 .faq-content {

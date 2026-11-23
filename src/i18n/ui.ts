@@ -21,7 +21,6 @@ export const ui = {
     'footer.pilar': 'Aplikasi',
     'footer.links': 'Tautan',
     'footer.whatsapp': '(WhatsApp Business)',
-    'wa.floating': 'Jadwalkan Demo via WhatsApp',
     'copy.label': 'Salin Link',
     'copy.done': 'Tersalin!',
     '404.title': 'Halaman tidak ditemukan',

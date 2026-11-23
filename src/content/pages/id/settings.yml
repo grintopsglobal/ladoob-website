@@ -10,13 +10,14 @@ seo:
   description: "Ladoob Core, Compass, Masar (مسار), dan Agent: satu sistem untuk kantor pusat, wisatawan, jamaah, dan agen travel Anda."
   ogImage: ""
 pesanWa:
-  umum: Halo tim Ladoob, saya ingin menjadwalkan demo platform Ladoob.
-  melayang: Halo tim Ladoob, saya ingin menjadwalkan demo platform Ladoob.
+  umum: Halo, saya mau coba Ladoob sekarang bisa?
+  melayang: Halo, saya mau coba Ladoob sekarang bisa?
   hero: Halo tim Ladoob, saya ingin menjadwalkan demo Ladoob Core, Compass, Masar, dan Agent.
   banner: Halo tim Ladoob, saya ingin menjadwalkan demo lengkap Ladoob.
   artikel: Halo tim Ladoob, saya baru membaca artikel di website Ladoob dan ingin menjadwalkan demo.
   pilar: Halo tim Ladoob, saya ingin menjadwalkan demo {nama}.
-  paket: Halo tim Ladoob, saya ingin menjadwalkan demo untuk paket {nama} ({harga}, lisensi sekali bayar).
+  paket: Halo, saya pilih Ladoob {nama} sekarang bisa?
+  footer: Halo, saya lihat di website & tertarik dengan Ladoob.
 klaim:
   - klaim: Metrik 75% lebih cepat menyusun manifest
     lokasi: Beranda > Manfaat > metrik 1

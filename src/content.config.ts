@@ -84,6 +84,8 @@ const home = z.object({
   type: z.literal('home'),
   menu: list(anchor),
   labelCta: z.string(),
+  // Tombol di header, menu mobile, dan tombol WhatsApp melayang.
+  labelCtaHeader: z.string(),
   hero: z.object({
     judul: z.string(),
     paragraf: z.string(),
@@ -98,7 +100,7 @@ const home = z.object({
     metrik: list(z.object({ angka: z.string(), keterangan: z.string() })),
     poin: list(z.object({ judul: z.string(), deskripsi: z.string() })),
   }),
-  harga: z.object({ judul: z.string(), deskripsi: z.string(), catatan: z.string() }),
+  harga: z.object({ judul: z.string(), deskripsi: z.string(), catatan: z.string(), labelCta: z.string() }),
   blog: z.object({ judul: z.string(), deskripsi: z.string() }),
   faq: z.object({ judul: z.string(), deskripsi: z.string() }),
   banner: z.object({ judul: z.string(), deskripsi: z.string(), catatan: z.string() }),
@@ -123,6 +125,7 @@ const settings = z.object({
     artikel: z.string(),
     pilar: z.string(),
     paket: z.string(),
+    footer: z.string(),
   }),
   // Klaim yang tampil di situs tetapi belum terverifikasi. `npm run cek-rilis` gagal selama ada yang belum dicentang.
   klaim: list(z.object({ klaim: z.string(), lokasi: z.string(), terverifikasi: z.boolean().default(false) })),

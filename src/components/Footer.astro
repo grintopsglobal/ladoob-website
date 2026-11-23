@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import { useTranslations, localizePath } from '../i18n/utils';
+import { waLink } from '../lib/wa';
 import type { Lang } from '../i18n/ui';
 
 interface Props {
@@ -14,14 +15,19 @@ interface Props {
   email: string;
   /** Format internasional tanpa +, mis. 6281234567890. Kosong = baris disembunyikan. */
   whatsapp: string;
+  /** Teks awal chat dari tautan WhatsApp di footer. */
+  pesanWa: string;
   copyright: string;
   taglineFooter: string;
 }
-const { lang, home = false, deskripsi, websiteResmi, pilar, tautan, email, whatsapp, copyright, taglineFooter } = Astro.props;
+const { lang, home = false, deskripsi, websiteResmi, pilar, tautan, email, whatsapp, pesanWa, copyright, taglineFooter } = Astro.props;
 const t = useTranslations(lang);
 const to = (anchor: string) => (home ? `#${anchor}` : localizePath(lang, `#${anchor}`));
 const wa = whatsapp.replace(/\D/g, '');
 const waTampil = wa && `+${wa.slice(0, 2)} ${wa.slice(2, 5)}-${wa.slice(5, 9)}-${wa.slice(9)}`;
+// Atribusi: kata "Grintec" pertama ditautkan ke grintecs.com (tab baru). Teks lain di-escape.
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const copyrightHtml = esc(copyright).replace('Grintec', '<a href="https://grintecs.com" target="_blank" rel="noopener noreferrer" class="text-slate-300 underline underline-offset-2 hover:text-white">Grintec</a>');
 ---
 
 <footer class="bg-ladoob-navyDark text-slate-300 pt-14 pb-24 sm:pb-14 border-t border-white/10">
@@ -61,13 +67,13 @@ const waTampil = wa && `+${wa.slice(0, 2)} ${wa.slice(2, 5)}-${wa.slice(5, 9)}-$
             {email && (
               <p class="flex items-center gap-2">
                 <Icon name="mail" class="w-4 h-4 text-amber-300" />
-                <a href={`mailto:${email}`} class="hover:text-white">{email}</a>
+                <a href={`mailto:${email}`} class="inline-block py-1 -my-1 hover:text-white">{email}</a>
               </p>
             )}
             {wa && (
               <p class="flex items-center gap-2">
                 <Icon name="phone" class="w-4 h-4 text-emerald-400" />
-                <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener noreferrer" class="hover:text-white">{waTampil} {t('footer.whatsapp')}</a>
+                <a href={waLink(pesanWa, wa)} target="_blank" rel="noopener noreferrer" class="inline-block py-1 -my-1 hover:text-white">{waTampil} {t('footer.whatsapp')}</a>
               </p>
             )}
           </div>
@@ -76,7 +82,7 @@ const waTampil = wa && `+${wa.slice(0, 2)} ${wa.slice(2, 5)}-${wa.slice(5, 9)}-$
     </div>
 
     <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-      <p>{copyright}</p>
+      <p set:html={copyrightHtml} />
       <p>{taglineFooter}</p>
     </div>
   </div>

@@ -1,0 +1,311 @@
+# Nama field di sini HARUS sama persis dengan schema di src/content.config.ts.
+# Decap CMS untuk Ladoob.
+backend:
+  name: github
+  repo: grintopsglobal/ladoob-website
+  branch: main
+  # Cloudflare Worker dari folder oauth-proxy/. GANTI dengan URL yang muncul setelah `npx wrangler deploy` (lihat README).
+  base_url: https://ladoob-decap-oauth.grintopsglobal.workers.dev
+  auth_endpoint: auth
+  commit_messages:
+    create: 'cms: tambah {{collection}} "{{slug}}"'
+    update: 'cms: ubah {{collection}} "{{slug}}"'
+    delete: 'cms: hapus {{collection}} "{{slug}}"'
+    uploadMedia: 'cms: unggah "{{path}}"'
+    deleteMedia: 'cms: hapus media "{{path}}"'
+
+# Saat dibuka dari localhost, Decap memakai `npm run cms` (decap-server), tanpa login.
+local_backend: true
+
+site_url: https://ladoob.my.id/
+display_url: https://ladoob.my.id/
+
+media_folder: public/uploads
+public_folder: /uploads
+
+i18n:
+  structure: multiple_folders
+  locales: [id]
+  default_locale: id
+
+_aksen: &aksen
+  - { label: 'Navy (Core)', value: navy }
+  - { label: 'Merah (Compass)', value: compass }
+  - { label: 'Cokelat (Masar)', value: masar }
+  - { label: 'Hijau (Agent)', value: agent }
+
+_anchor: &anchor
+  - { label: 'Hero', value: hero }
+  - { label: 'Fitur & Ekosistem', value: fitur }
+  - { label: 'Manfaat Bisnis', value: manfaat }
+  - { label: 'Harga', value: harga }
+  - { label: 'Blog', value: blog }
+  - { label: 'FAQ', value: faq }
+
+_tebal: &tebal 'Tulis **teks** untuk huruf tebal dan *teks* untuk miring.'
+
+_judulSection: &judulSection
+  - { label: Judul, name: judul, widget: string, i18n: true }
+  - { label: Deskripsi, name: deskripsi, widget: text, i18n: true }
+
+collections:
+  - name: pilar
+    label: 'Produk (4 aplikasi)'
+    label_singular: Produk
+    folder: src/content/pilar
+    create: false
+    delete: false
+    i18n: true
+    extension: yml
+    format: yml
+    identifier_field: nama
+    summary: '{{order}}. {{nama}}'
+    sortable_fields: [order]
+    fields:
+      - { label: Urutan, name: order, widget: number, value_type: int, i18n: duplicate }
+      - { label: Warna produk, name: aksen, widget: select, options: *aksen, i18n: duplicate }
+      - { label: Nama produk, name: nama, widget: string, i18n: true }
+      - { label: Nama Arab (opsional), name: namaArab, widget: string, required: false, i18n: true, hint: 'Tampil berwarna setelah nama, mis. مسار.' }
+      - { label: Untuk siapa, name: peran, widget: string, i18n: true, hint: 'Satu baris di bawah nama tab, mis. "Aplikasi untuk wisatawan umum".' }
+      - { label: Label di footer, name: labelFooter, widget: string, i18n: true }
+      - { label: Judul panel, name: judul, widget: string, i18n: true }
+      - { label: Subjudul panel, name: subjudul, widget: text, i18n: true }
+      - { label: Fitur, name: fitur, widget: list, i18n: true, summary: '{{fields.item}}', field: { label: Fitur, name: item, widget: string } }
+      - { label: Sorotan (judul), name: highlightJudul, widget: string, i18n: true }
+      - { label: Sorotan (deskripsi), name: highlightDeskripsi, widget: text, i18n: true }
+
+  - name: paket
+    label: 'Paket Harga'
+    label_singular: Paket
+    folder: src/content/paket
+    create: true
+    i18n: true
+    extension: yml
+    format: yml
+    identifier_field: nama
+    slug: '{{fields.nama}}'
+    summary: '{{order}}. {{nama}} ({{harga}})'
+    sortable_fields: [order]
+    fields:
+      - { label: Nama paket, name: nama, widget: string, i18n: true }
+      - { label: Urutan, name: order, widget: number, value_type: int, default: 99, i18n: duplicate }
+      - label: Gaya kartu
+        name: gaya
+        widget: select
+        default: biasa
+        i18n: duplicate
+        options:
+          - { label: 'Biasa (putih)', value: biasa }
+          - { label: 'Disorot (garis navy + pita)', value: sorot }
+          - { label: 'Gelap (navy)', value: gelap }
+      - { label: Label sorotan, name: pita, widget: string, required: false, i18n: true, hint: 'Mis. "Rekomendasi". Kosongkan bila tidak perlu.' }
+      - { label: Deskripsi, name: deskripsi, widget: string, i18n: true }
+      - { label: Label harga, name: labelHarga, widget: string, default: 'Lisensi sekali bayar', i18n: true }
+      - { label: Harga, name: harga, widget: string, i18n: true, hint: 'Teks apa adanya, mis. "Rp 14.500.000" atau "Mulai Rp 85.000.000". Ikut masuk ke pesan WhatsApp paket ini.' }
+      - { label: Label maintenance, name: labelMaintenance, widget: string, default: 'Cloud dan maintenance', i18n: true }
+      - { label: Biaya maintenance, name: maintenance, widget: string, i18n: true }
+      - { label: Catatan maintenance, name: catatanMaintenance, widget: string, required: false, i18n: true, hint: 'Mis. "(Gratis tahun pertama)".' }
+      - label: Warna catatan
+        name: warnaCatatan
+        widget: select
+        default: hijau
+        i18n: duplicate
+        options: [{ label: Hijau, value: hijau }, { label: Navy, value: navy }]
+      - { label: Fitur, name: fitur, widget: list, i18n: true, hint: *tebal, summary: '{{fields.item}}', field: { label: Fitur, name: item, widget: string } }
+      - { label: Pesan WhatsApp khusus, name: pesanWa, widget: string, required: false, i18n: true, hint: 'Kosongkan agar dirakit otomatis dari nama + harga (Pengaturan Situs > Pesan WhatsApp > Paket).' }
+
+  - name: faq
+    label: FAQ
+    label_singular: Pertanyaan
+    folder: src/content/faq
+    create: true
+    i18n: true
+    extension: yml
+    format: yml
+    identifier_field: pertanyaan
+    slug: '{{fields.pertanyaan}}'
+    summary: '{{order}}. {{pertanyaan}}'
+    sortable_fields: [order]
+    fields:
+      - { label: Pertanyaan, name: pertanyaan, widget: string, i18n: true, hint: 'Nomor urut ditambahkan otomatis.' }
+      - { label: Jawaban, name: jawaban, widget: markdown, buttons: [bold, italic], editor_components: [], i18n: true }
+      - { label: Urutan, name: order, widget: number, value_type: int, default: 99, i18n: duplicate }
+
+  - name: blog
+    label: Blog
+    label_singular: Artikel
+    folder: src/content/blog
+    create: true
+    i18n: true
+    extension: md
+    format: frontmatter
+    identifier_field: judul
+    slug: '{{fields.slug}}'
+    summary: '{{judul}} ({{tanggal}})'
+    sortable_fields: [tanggal, judul]
+    fields:
+      - { label: Judul, name: judul, widget: string, i18n: true }
+      - label: Slug URL
+        name: slug
+        widget: string
+        i18n: true
+        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Huruf kecil, angka, dan tanda hubung saja']
+        hint: 'Bagian URL: /id/blog/<slug>/. Mengubah slug artikel yang sudah tayang membuat URL lama menjadi 404.'
+      - { label: Kategori, name: kategori, widget: string, i18n: true }
+      - { label: Estimasi baca (menit), name: estimasiBaca, widget: number, value_type: int, min: 1, i18n: duplicate }
+      - { label: Ringkasan (kartu & meta description), name: ringkasan, widget: text, i18n: true }
+      - { label: Ringkasan baca cepat (jendela di beranda), name: ringkasanModal, widget: markdown, buttons: [bold, italic], editor_components: [], i18n: true }
+      - { label: Tanggal terbit, name: tanggal, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, format: 'YYYY-MM-DD', i18n: duplicate }
+      - { label: Warna kategori, name: aksen, widget: select, options: *aksen, default: navy, i18n: duplicate }
+      - { label: Gambar (opsional, di halaman artikel), name: gambar, widget: image, required: false, i18n: duplicate, hint: 'Sekitar 1600 px, WebP, di bawah 200 KB.' }
+      - { label: Draft (tidak tampil di situs), name: draft, widget: boolean, default: false, i18n: duplicate }
+      - { label: Isi artikel, name: body, widget: markdown, i18n: true }
+
+  # Halaman & pengaturan memakai folder collection (bukan "files") karena i18n files
+  # di Decap hanya mendukung single_file; ini menjaga struktur pages/<bahasa>/<type>.yml.
+  - name: page_home
+    label: 'Halaman: Beranda'
+    folder: src/content/pages
+    create: false
+    delete: false
+    i18n: true
+    extension: yml
+    format: yml
+    identifier_field: type
+    summary: 'Beranda'
+    filter: { field: type, value: home }
+    fields:
+      - { name: type, widget: hidden, default: home, i18n: duplicate }
+      - label: Menu
+        name: menu
+        widget: list
+        i18n: true
+        fields:
+          - { label: Label, name: label, widget: string, i18n: true }
+          - { label: Tujuan, name: anchor, widget: select, options: *anchor, i18n: duplicate }
+      - { label: Label tombol WhatsApp (semua CTA), name: labelCta, widget: string, i18n: true }
+      - label: Hero
+        name: hero
+        widget: object
+        i18n: true
+        fields:
+          - { label: Judul (H1), name: judul, widget: string, i18n: true }
+          - { label: Paragraf, name: paragraf, widget: text, i18n: true, hint: 'Nama produk yang ditebalkan (**Ladoob Core**) otomatis diberi warna produknya.' }
+          - { label: Teks tombol kedua (ke Harga), name: ctaKedua, widget: string, i18n: true }
+          - { label: Poin singkat di bawah tombol, name: poin, widget: list, i18n: true, summary: '{{fields.item}}', field: { label: Poin, name: item, widget: string } }
+      - { label: 'Section Produk', name: fitur, widget: object, i18n: true, fields: *judulSection }
+      - label: Section Manfaat
+        name: manfaat
+        widget: object
+        i18n: true
+        fields:
+          - { label: Judul, name: judul, widget: string, i18n: true }
+          - { label: Narasi, name: narasi, widget: text, i18n: true }
+          - { label: Judul angka, name: judulMetrik, widget: string, i18n: true }
+          - label: Angka
+            name: metrik
+            widget: list
+            i18n: true
+            hint: 'Angka harus punya dasar yang bisa dibuktikan. Kosongkan daftar ini untuk menyembunyikannya.'
+            fields:
+              - { label: Angka, name: angka, widget: string, i18n: true }
+              - { label: Keterangan, name: keterangan, widget: string, i18n: true }
+          - label: Poin
+            name: poin
+            widget: list
+            i18n: true
+            fields:
+              - { label: Judul, name: judul, widget: string, i18n: true }
+              - { label: Deskripsi, name: deskripsi, widget: text, i18n: true }
+      - label: Section Harga
+        name: harga
+        widget: object
+        i18n: true
+        fields:
+          - { label: Judul, name: judul, widget: string, i18n: true }
+          - { label: Deskripsi, name: deskripsi, widget: text, i18n: true, hint: *tebal }
+          - { label: Catatan di bawah paket, name: catatan, widget: text, i18n: true, hint: *tebal }
+      - { label: Section Blog, name: blog, widget: object, i18n: true, fields: *judulSection }
+      - { label: Section FAQ, name: faq, widget: object, i18n: true, fields: *judulSection }
+      - label: Ajakan demo (bawah)
+        name: banner
+        widget: object
+        i18n: true
+        fields:
+          - { label: Judul, name: judul, widget: string, i18n: true }
+          - { label: Deskripsi, name: deskripsi, widget: text, i18n: true, hint: *tebal }
+          - { label: Catatan di bawah tombol, name: catatan, widget: string, i18n: true }
+      - label: Tautan di footer
+        name: tautanFooter
+        widget: list
+        i18n: true
+        fields:
+          - { label: Label, name: label, widget: string, i18n: true }
+          - { label: Tujuan, name: anchor, widget: select, options: *anchor, i18n: duplicate }
+
+  - name: settings
+    label: 'Pengaturan Situs'
+    folder: src/content/pages
+    create: false
+    delete: false
+    i18n: true
+    extension: yml
+    format: yml
+    identifier_field: type
+    summary: 'Pengaturan situs'
+    filter: { field: type, value: settings }
+    fields:
+      - { name: type, widget: hidden, default: settings, i18n: duplicate }
+      - { label: Nomor WhatsApp, name: whatsapp, widget: string, required: false, i18n: duplicate, hint: 'Format internasional tanpa + dan spasi, mis. 6281234567890. Wajib diisi sebelum rilis.' }
+      - { label: Email, name: email, widget: string, required: false, i18n: duplicate, hint: 'Kosong = baris email di footer disembunyikan.' }
+      - { label: Teks "Website resmi", name: websiteResmi, widget: string, i18n: duplicate }
+      - { label: Deskripsi footer, name: deskripsiFooter, widget: text, i18n: true }
+      - { label: Tagline footer (kanan bawah), name: taglineFooter, widget: string, i18n: true }
+      - { label: Copyright, name: copyright, widget: string, i18n: true, hint: '{tahun} diganti tahun berjalan.' }
+      - label: SEO
+        name: seo
+        widget: object
+        i18n: true
+        fields:
+          - { label: Judul situs (title), name: title, widget: string, i18n: true }
+          - { label: Meta description, name: description, widget: text, i18n: true }
+          - { label: Gambar OG (1200x630), name: ogImage, widget: image, required: false, i18n: duplicate }
+      - label: Pesan WhatsApp
+        name: pesanWa
+        widget: object
+        i18n: true
+        fields:
+          - { label: Header, name: umum, widget: string, i18n: true }
+          - { label: Tombol melayang, name: melayang, widget: string, i18n: true }
+          - { label: Hero, name: hero, widget: string, i18n: true }
+          - { label: Banner bawah, name: banner, widget: string, i18n: true }
+          - { label: Modal & halaman artikel, name: artikel, widget: string, i18n: true }
+          - { label: Panel produk, name: pilar, widget: string, i18n: true, hint: '{nama} diganti nama produk.' }
+          - { label: Paket harga, name: paket, widget: string, i18n: true, hint: '{nama} dan {harga} diganti dari data paket.' }
+      - label: Klaim yang perlu diverifikasi
+        name: klaim
+        widget: list
+        i18n: true
+        hint: 'Klaim yang tampil di situs. Centang "Terverifikasi" setelah ada bukti. `npm run cek-rilis` gagal selama ada yang belum dicentang.'
+        summary: '{{fields.terverifikasi}} | {{fields.klaim}}'
+        fields:
+          - { label: Klaim, name: klaim, widget: string }
+          - { label: Lokasi, name: lokasi, widget: string }
+          - { label: Terverifikasi, name: terverifikasi, widget: boolean, default: false }
+      - label: SEO & Tracking
+        name: tracking
+        widget: object
+        i18n: true
+        hint: 'Pilih GTM ATAU GA4/Meta Pixel langsung, jangan keduanya (data tercatat ganda).'
+        fields:
+          - { label: Kode verifikasi Search Console, name: gscVerification, widget: string, required: false, hint: 'Isi content="..." dari tag meta google-site-verification.' }
+          - { label: Google Tag Manager ID, name: gtmId, widget: string, required: false, hint: 'GTM-XXXXXXX' }
+          - { label: Google Analytics 4 ID, name: ga4Id, widget: string, required: false, hint: 'G-XXXXXXXXXX' }
+          - { label: Meta Pixel ID, name: metaPixelId, widget: string, required: false, hint: 'Angka saja.' }
+          - label: Meta tag tambahan
+            name: metaTags
+            widget: list
+            required: false
+            fields:
+              - { label: name, name: name, widget: string }
+              - { label: content, name: content, widget: string }

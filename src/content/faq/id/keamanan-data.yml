@@ -1,0 +1,3 @@
+pertanyaan: "Apakah data keuangan dan database jamaah milik travel kami terjamin keamanannya?"
+jawaban: "**Sangat terjamin.** Setiap klien mendapatkan isolasi database terpisah dengan enkripsi SSL/TLS end-to-end, kontrol hak akses berbasis peran (*Role-Based Access Control*), log aktivitas pengguna (*audit trail*), serta pencadangan data otomatis harian. Data Anda sepenuhnya milik perusahaan Anda dan tidak pernah dibagikan ke pihak mana pun."
+order: 6

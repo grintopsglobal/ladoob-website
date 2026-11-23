@@ -1,0 +1,15 @@
+order: 4
+aksen: "agent"
+nama: "Ladoob Agent"
+namaArab: ""
+peran: "Aplikasi untuk agen, reseller, dan affiliator"
+labelFooter: "Ladoob Agent"
+judul: "Alat jual untuk agen, reseller, dan affiliator"
+subjudul: "Mitra dan alumni jamaah dapat ikut menjual paket, dengan komisi yang dihitung otomatis dan bisa mereka pantau sendiri."
+fitur:
+  - "Katalog paket dan materi promosi siap sebar, lengkap dengan link afiliasi unik"
+  - "Pendaftaran jamaah dan unggah KTP atau paspor langsung dari ponsel"
+  - "Status pembayaran prospek dan estimasi komisi yang bisa dipantau kapan saja"
+  - "Tingkatan agen dan pengajuan pencairan komisi yang tercatat rapi"
+highlightJudul: "Mitra mengecek sendiri, admin tidak dikejar pertanyaan"
+highlightDeskripsi: "Sisa seat dan status pelunasan jamaah dapat dilihat mitra kapan saja tanpa harus bertanya ke admin kantor pusat."

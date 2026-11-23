@@ -1,0 +1,17 @@
+nama: "Custom Whitelabel"
+order: 4
+gaya: "gelap"
+pita: ""
+deskripsi: "Seluruh aplikasi memakai nama, logo, dan domain merek Anda sendiri."
+labelHarga: "Lisensi sekali bayar"
+harga: "Mulai Rp 85.000.000"
+labelMaintenance: "Cloud dan maintenance"
+maintenance: "Sesuai kapasitas server yang dibutuhkan"
+catatanMaintenance: ""
+warnaCatatan: "hijau"
+fitur:
+  - "Nama aplikasi, ikon, warna, dan domain milik merek Anda di Play Store dan App Store"
+  - "Alur bisnis dan modul disesuaikan dengan perusahaan Anda"
+  - "Bisa dipasang di cloud atau server milik perusahaan"
+  - "Opsi source code penuh atau perjanjian escrow resmi"
+pesanWa: "Halo tim Ladoob, saya ingin menjadwalkan demo untuk paket Custom Whitelabel."

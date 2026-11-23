@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import SEO from '../components/SEO.astro';
+import Tracking from '../components/Tracking.astro';
+import type { Lang } from '../i18n/ui';
+import { useTranslations, pathWithoutLang } from '../i18n/utils';
+import { withBase } from '../lib/url';
+import { waLink } from '../lib/wa';
+import { byLang, getPage, getSettings, isi } from '../lib/content';
+
+interface Props {
+  lang: Lang;
+  /** Kosong = judul default dari Pengaturan Situs > SEO. */
+  title?: string;
+  description?: string;
+  home?: boolean;
+  /** Path padanan per bahasa tanpa prefix (hreflang). Default: path halaman ini. */
+  alternates?: Record<Lang, string>;
+  image?: string;
+  type?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+const { lang, home = false, type, jsonLd, noindex } = Astro.props;
+const here = pathWithoutLang(Astro.url);
+const alternates = Astro.props.alternates ?? ({ id: here } as Record<Lang, string>);
+const t = useTranslations(lang);
+const settings = await getSettings(lang);
+const page = await getPage(lang, 'home');
+const pilar = await byLang('pilar', lang);
+const wa = (pesan: string) => waLink(pesan, settings.whatsapp);
+
+const title = Astro.props.title ? `${Astro.props.title} | Ladoob` : settings.seo.title;
+const description = Astro.props.description || settings.seo.description;
+const fonts = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap';
+---
+
+<!doctype html>
+<html lang={lang} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#183654" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href={fonts} />
+    <link rel="stylesheet" href={fonts} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={fonts} /></noscript>
+    <slot name="head" />
+    <Tracking tracking={settings.tracking} part="head" />
+    <SEO title={title} description={description} lang={lang} alternates={alternates} image={Astro.props.image || settings.seo.ogImage} type={type} siteName="Ladoob" jsonLd={jsonLd} noindex={noindex} />
+  </head>
+  <body class="bg-white text-slate-800 antialiased selection:bg-ladoob-navy selection:text-white">
+    <Tracking tracking={settings.tracking} part="body" />
+    <Header lang={lang} home={home} menu={page.menu} ctaLabel={page.labelCta} ctaHref={wa(settings.pesanWa.umum)} />
+
+    <main class="pt-[80px]" style="overflow-x: clip;">
+      <slot />
+    </main>
+
+    <Footer
+      lang={lang}
+      home={home}
+      deskripsi={settings.deskripsiFooter}
+      websiteResmi={settings.websiteResmi}
+      pilar={pilar.map((p) => ({ key: p.id.replace(/^[a-z]{2}\//, ''), label: p.data.labelFooter }))}
+      tautan={page.tautanFooter}
+      email={settings.email}
+      whatsapp={settings.whatsapp}
+      copyright={isi(settings.copyright, { tahun: String(new Date().getFullYear()) })}
+      taglineFooter={settings.taglineFooter}
+    />
+
+    <a
+      href={wa(settings.pesanWa.melayang)}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={t('wa.floating')}
+      class="sm:hidden fixed bottom-4 right-4 z-40 inline-flex items-center gap-2 bg-ladoob-agent hover:bg-[#164237] text-white font-semibold px-4 py-3 rounded-full shadow-lg transition-colors"
+    >
+      <Icon name="message-circle" class="w-5 h-5 text-emerald-300" />
+      <span class="text-sm">{page.labelCta}</span>
+    </a>
+  </body>
+</html>

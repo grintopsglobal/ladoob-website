@@ -1,0 +1,383 @@
+---
+// Beranda. Urutan section dan isi mengikuti mockup; perlakuan visual mengikuti DESIGN.md (ENERGY 1 / RHYTHM 2 / MOTION 1).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from './Icon.astro';
+import Hex from './Hex.astro';
+import HeroVisual from './HeroVisual.astro';
+import BlogCard from './BlogCard.astro';
+import { useTranslations, localizePath } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+import { waLink } from '../lib/wa';
+import { inline, paragraf } from '../lib/md';
+import { A } from '../lib/aksen';
+import { byLang, blogByLang, getPage, getSettings, isi, keyOf } from '../lib/content';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const page = await getPage(lang, 'home');
+const settings = await getSettings(lang);
+const pilar = (await byLang('pilar', lang)).map((e) => ({ key: keyOf(e), ...e.data }));
+const paket = (await byLang('paket', lang)).map((e) => e.data);
+const faq = (await byLang('faq', lang)).map((e) => e.data);
+const blog = (await blogByLang(lang)).slice(0, 3).map((e) => e.data);
+const wa = (pesan: string) => waLink(pesan, settings.whatsapp);
+const ctaLabel = page.labelCta;
+
+// Nama produk yang ditebalkan di paragraf hero diberi warna produknya.
+let paragrafHero = inline(page.hero.paragraf);
+for (const p of pilar) {
+  paragrafHero = paragrafHero.replaceAll(`<strong>${p.nama}</strong>`, `<strong class="${A[p.aksen].text} font-semibold">${p.nama}</strong>`);
+}
+
+// Kartu harga. Aksen hijau hanya pada paket yang disorot (titik konversi), sisanya tombol garis.
+const G = {
+  biasa: { kartu: 'bg-white border border-slate-200', sub: 'text-slate-600', label: 'text-slate-500', garis: 'border-slate-200', ul: 'text-slate-700', cek: 'text-ladoob-navy', cta: 'border border-ladoob-navy text-ladoob-navy hover:bg-ladoob-navy hover:text-white' },
+  sorot: { kartu: 'bg-white border-2 border-ladoob-navy', sub: 'text-slate-600', label: 'text-slate-500', garis: 'border-slate-200', ul: 'text-slate-700', cek: 'text-ladoob-navy', cta: 'bg-ladoob-agent text-white hover:bg-[#164237]' },
+  gelap: { kartu: 'bg-ladoob-navy border border-ladoob-navy text-white', sub: 'text-slate-300', label: 'text-slate-300', garis: 'border-white/15', ul: 'text-slate-200', cek: 'text-white/80', cta: 'bg-white text-ladoob-navy hover:bg-slate-100' },
+};
+const WARNA_CATATAN = { hijau: 'text-emerald-700', navy: 'text-ladoob-navy' };
+const pesanPaket = (p: (typeof paket)[number]) => p.pesanWa || isi(settings.pesanWa.paket, { nama: p.nama, harga: p.harga });
+
+const h2 = 'font-heading text-3xl sm:text-4xl font-extrabold text-ladoob-navy tracking-tight';
+const tombolUtama = 'inline-flex items-center justify-center gap-2 bg-ladoob-agent hover:bg-[#164237] text-white font-semibold px-6 py-3.5 rounded-lg transition-colors';
+const tombolGaris = 'inline-flex items-center justify-center gap-2 border border-slate-300 hover:border-ladoob-navy text-ladoob-navy font-semibold px-6 py-3.5 rounded-lg transition-colors';
+---
+
+<BaseLayout lang={lang} home>
+  <!-- Hero -->
+  <section id="hero" class="bg-white border-b border-slate-200" style="overflow-x: clip;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 lg:pt-20 lg:pb-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+      <div class="lg:col-span-5">
+        <h1 class="font-heading text-4xl sm:text-5xl lg:text-[44px] font-extrabold text-ladoob-navy tracking-tight leading-[1.12] mb-6">{page.hero.judul}</h1>
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-8" set:html={paragrafHero} />
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a href={wa(settings.pesanWa.hero)} target="_blank" rel="noopener noreferrer" class={tombolUtama}>
+            <Icon name="message-circle" class="w-5 h-5" />
+            <span>{ctaLabel}</span>
+          </a>
+          <a href="#harga" class={tombolGaris}>{page.hero.ctaKedua}</a>
+        </div>
+
+        <ul class="mt-10 pt-6 border-t border-slate-200 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-700">
+          {page.hero.poin.map((p) => (
+            <li class="flex items-center gap-2">
+              <Icon name="check" class="w-4 h-4 text-ladoob-navy shrink-0" />
+              {p}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <HeroVisual lang={lang} />
+    </div>
+  </section>
+
+  <!-- Produk: empat aplikasi -->
+  <section id="fitur" class="py-20 sm:py-24 bg-ladoob-slateBg border-b border-slate-200" style="overflow-x: clip;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl mb-12">
+        <h2 class={`${h2} mb-4`}>{page.fitur.judul}</h2>
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed">{page.fitur.deskripsi}</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+        <div class="lg:col-span-4 flex lg:flex-col gap-2 overflow-x-auto no-scrollbar -mx-4 px-4 lg:mx-0 lg:px-0" role="tablist" aria-label={t('pilar.tablist')}>
+          {pilar.map((p, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`tab-${p.key}`}
+              aria-controls={`panel-${p.key}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+              data-pillar={p.key}
+              class="pillar-tab shrink-0 text-left flex items-start gap-3 px-4 py-3 min-h-11 rounded-xl border border-transparent hover:bg-white/70 aria-selected:bg-white aria-selected:border-slate-200 transition-colors"
+            >
+              <Hex warna={A[p.aksen].hex} class="w-3.5 h-4 mt-0.5" />
+              <span>
+                <span class="block font-heading font-bold text-sm text-ladoob-navy whitespace-nowrap">
+                  {p.nama}{p.namaArab && <span class={`${A[p.aksen].text} font-normal`}> {p.namaArab}</span>}
+                </span>
+                <span class="hidden lg:block text-xs text-slate-500 mt-0.5">{p.peran}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div class="lg:col-span-8 bg-white rounded-xl border border-slate-200 p-6 sm:p-8">
+          {pilar.map((p, i) => (
+            <div role="tabpanel" id={`panel-${p.key}`} aria-labelledby={`tab-${p.key}`} hidden={i !== 0}>
+              <p class={`text-sm font-semibold ${A[p.aksen].text} mb-2`}>{p.peran}</p>
+              <h3 class="font-heading text-2xl font-extrabold text-ladoob-navy tracking-tight mb-3">{p.judul}</h3>
+              <p class="text-base text-slate-600 leading-relaxed mb-6">{p.subjudul}</p>
+              <ul class="grid sm:grid-cols-2 gap-x-8 gap-y-3 mb-8">
+                {p.fitur.map((f) => (
+                  <li class="flex items-start gap-3 text-sm text-slate-700 leading-relaxed">
+                    <Icon name="check" class={`w-4 h-4 mt-0.5 shrink-0 ${A[p.aksen].text}`} />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <div class={`${A[p.aksen].tint} rounded-lg p-5 sm:flex sm:items-center sm:justify-between sm:gap-6`}>
+                <div>
+                  <p class="font-heading font-bold text-ladoob-navy">{p.highlightJudul}</p>
+                  <p class="text-sm text-slate-600 leading-relaxed mt-1">{p.highlightDeskripsi}</p>
+                </div>
+                <a href={wa(isi(settings.pesanWa.pilar, { nama: p.nama }))} target="_blank" rel="noopener noreferrer" class="mt-4 sm:mt-0 shrink-0 inline-flex items-center justify-center gap-2 border border-ladoob-navy text-ladoob-navy hover:bg-ladoob-navy hover:text-white font-semibold text-sm px-4 py-3 rounded-lg transition-colors">
+                  {t('pilar.cta').replace('{nama}', p.nama)}
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Manfaat -->
+  <section id="manfaat" class="py-20 sm:py-24 bg-white" style="overflow-x: clip;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+      <div class="lg:col-span-5">
+        <h2 class={`${h2} mb-4`}>{page.manfaat.judul}</h2>
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed mb-10">{page.manfaat.narasi}</p>
+        {page.manfaat.metrik.length > 0 && (
+          <div>
+            <p class="text-sm font-semibold text-slate-500 mb-4">{page.manfaat.judulMetrik}</p>
+            <dl class="grid grid-cols-2 gap-x-6 gap-y-6 pt-6 border-t border-slate-200">
+              {page.manfaat.metrik.map((m) => (
+                <div>
+                  <dt class="font-heading text-3xl font-extrabold text-ladoob-navy">{m.angka}</dt>
+                  <dd class="text-sm text-slate-600 leading-snug mt-1">{m.keterangan}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
+      </div>
+
+      <ul class="lg:col-span-7 divide-y divide-slate-200 border-y border-slate-200">
+        {page.manfaat.poin.map((p) => (
+          <li class="py-7 grid sm:grid-cols-5 gap-2 sm:gap-6">
+            <h3 class="sm:col-span-2 font-heading font-bold text-lg text-ladoob-navy leading-snug">{p.judul}</h3>
+            <p class="sm:col-span-3 text-slate-600 leading-relaxed">{p.deskripsi}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Harga -->
+  <section id="harga" class="py-20 sm:py-24 bg-ladoob-slateBg border-y border-slate-200" style="overflow-x: clip;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12 mb-12">
+        <h2 class={`${h2} lg:col-span-5`}>{page.harga.judul}</h2>
+        <p class="lg:col-span-7 text-base sm:text-lg text-slate-600 leading-relaxed lg:pt-1" set:html={inline(page.harga.deskripsi)} />
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-stretch">
+        {paket.map((p) => {
+          const g = G[p.gaya];
+          return (
+            <div class={`relative flex flex-col rounded-xl p-6 ${g.kartu}`}>
+              {p.pita && <p class="absolute top-6 right-6 text-xs font-semibold text-ladoob-navy bg-ladoob-navy/[0.06] rounded px-2 py-1">{p.pita}</p>}
+              <h3 class:list={['font-heading font-bold text-xl', p.pita && 'pr-24']}>{p.nama}</h3>
+              <p class={`text-sm ${g.sub} mt-1 xl:min-h-[3.75rem]`}>{p.deskripsi}</p>
+
+              <div class={`mt-6 pb-6 border-b ${g.garis}`}>
+                <p class={`text-xs ${g.label}`}>{p.labelHarga}</p>
+                <p class="font-heading text-2xl font-extrabold mt-1">{p.harga}</p>
+                <p class={`text-xs ${g.label} mt-4`}>{p.labelMaintenance}</p>
+                <p class="text-sm font-semibold mt-0.5">
+                  {p.maintenance}
+                  {p.catatanMaintenance && <span class={`font-normal ${p.gaya === 'gelap' ? 'text-slate-300' : WARNA_CATATAN[p.warnaCatatan]}`}> {p.catatanMaintenance}</span>}
+                </p>
+              </div>
+
+              <ul class={`mt-6 space-y-3 text-sm ${g.ul} flex-1`}>
+                {p.fitur.map((f) => (
+                  <li class="flex items-start gap-2.5 leading-relaxed">
+                    <Icon name="check" class={`w-4 h-4 mt-0.5 shrink-0 ${g.cek}`} />
+                    <span set:html={inline(f)} />
+                  </li>
+                ))}
+              </ul>
+
+              <a href={wa(pesanPaket(p))} target="_blank" rel="noopener noreferrer" class={`mt-8 w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-semibold text-sm transition-colors ${g.cta}`}>
+                <Icon name="message-circle" class="w-4 h-4" />
+                <span>{ctaLabel}</span>
+              </a>
+            </div>
+          );
+        })}
+      </div>
+
+      <div class="mt-8 flex items-start gap-3 bg-white border border-slate-200 rounded-xl p-5 text-sm text-slate-600 leading-relaxed">
+        <Icon name="info" class="w-5 h-5 text-slate-500 shrink-0" />
+        <p set:html={inline(page.harga.catatan)} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog -->
+  <section id="blog" class="py-20 sm:py-24 bg-white" style="overflow-x: clip;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+        <div class="max-w-2xl">
+          <h2 class={`${h2} mb-3`}>{page.blog.judul}</h2>
+          <p class="text-base text-slate-600 leading-relaxed">{page.blog.deskripsi}</p>
+        </div>
+        <a href={localizePath(lang, 'blog/')} class="shrink-0 inline-flex items-center gap-1.5 text-sm font-semibold text-ladoob-navy hover:underline underline-offset-4 py-3 -my-3">
+          {t('blog.all')}
+          <Icon name="arrow-right" class="w-4 h-4" />
+        </a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {blog.map((b, i) => <BlogCard lang={lang} artikel={b} modal={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-20 sm:py-24 bg-ladoob-slateBg border-y border-slate-200" style="overflow-x: clip;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+      <div class="lg:col-span-4">
+        <h2 class={`${h2} mb-4`}>{page.faq.judul}</h2>
+        <p class="text-base text-slate-600 leading-relaxed">{page.faq.deskripsi}</p>
+      </div>
+
+      <div class="lg:col-span-8 divide-y divide-slate-200 border-y border-slate-200" id="faqAccordion">
+        {faq.map((f, i) => (
+          <div class:list={['faq-item', { active: i === 0 }]}>
+            <h3>
+              <button
+                type="button"
+                id={`faq-q-${i}`}
+                aria-expanded={i === 0 ? 'true' : 'false'}
+                aria-controls={`faq-a-${i}`}
+                class="faq-trigger w-full py-5 text-left flex items-start justify-between gap-6"
+              >
+                <span class="font-heading font-semibold text-base text-ladoob-navy leading-snug">{f.pertanyaan}</span>
+                <Icon name="chevron-down" class="faq-chevron w-5 h-5 text-slate-500 shrink-0 mt-0.5 transition-transform duration-200" />
+              </button>
+            </h3>
+            <div id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`} class="faq-content" inert={i !== 0}>
+              <p class="pb-6 pr-10 text-sm sm:text-base text-slate-600 leading-relaxed" set:html={inline(f.jawaban)} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Ajakan demo -->
+  <section class="py-16 sm:py-20 bg-white" style="overflow-x: clip;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-ladoob-navy rounded-2xl px-6 py-10 sm:p-12 lg:flex lg:items-center lg:justify-between lg:gap-12">
+        <div class="max-w-2xl">
+          <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-white tracking-tight">{page.banner.judul}</h2>
+          <p class="text-slate-200 leading-relaxed mt-3" set:html={inline(page.banner.deskripsi)} />
+        </div>
+        <div class="mt-8 lg:mt-0 shrink-0">
+          <a href={wa(settings.pesanWa.banner)} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-ladoob-navy font-semibold px-6 py-3.5 rounded-lg transition-colors w-full sm:w-auto">
+            <Icon name="message-circle" class="w-5 h-5 text-ladoob-agent" />
+            <span>{ctaLabel}</span>
+          </a>
+          <p class="text-xs text-slate-300 mt-3">{page.banner.catatan}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal baca cepat: satu <dialog> per artikel, dirender saat build -->
+  {blog.map((b, i) => (
+    <dialog id={`article-${i}`} class="article-modal m-auto bg-white rounded-xl max-w-2xl w-[calc(100%-2rem)] max-h-[85vh] overflow-y-auto shadow-2xl border border-slate-200 p-6 sm:p-8" aria-labelledby={`article-${i}-title`}>
+      <form method="dialog">
+        <button type="submit" aria-label={t('blog.close')} class="absolute top-4 right-4 p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-colors">
+          <Icon name="x" class="w-5 h-5" />
+        </button>
+      </form>
+      <p class={`text-sm font-semibold ${A[b.aksen].text} mb-2`}>{b.kategori}</p>
+      <h3 id={`article-${i}-title`} class="font-heading font-extrabold text-xl sm:text-2xl text-ladoob-navy leading-snug mb-4 pr-8">{b.judul}</h3>
+      <div class="space-y-4 text-sm sm:text-base text-slate-600 leading-relaxed">
+        {paragraf(b.ringkasanModal).map((p) => <p set:html={p} />)}
+      </div>
+      <a href={localizePath(lang, `blog/${b.slug}/`)} class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-ladoob-navy hover:underline underline-offset-4 py-3 -my-3">
+        {t('blog.readMore')}
+        <Icon name="arrow-right" class="w-4 h-4" />
+      </a>
+      <div class="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <span class="text-sm text-slate-600">{t('blog.modalCta')}</span>
+        <a href={wa(settings.pesanWa.artikel)} target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 bg-ladoob-agent hover:bg-[#164237] text-white text-sm font-semibold px-4 py-3 rounded-lg transition-colors">
+          <Icon name="message-circle" class="w-4 h-4" />
+          <span>{ctaLabel}</span>
+        </a>
+      </div>
+    </dialog>
+  ))}
+</BaseLayout>
+
+<script>
+  // Tab produk: pola ARIA tablist (panah, Home/End, roving tabindex). Tampilan tab aktif lewat aria-selected di CSS.
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('.pillar-tab')];
+
+  function selectPillar(key: string, focus = false) {
+    for (const tab of tabs) {
+      const on = tab.dataset.pillar === key;
+      tab.setAttribute('aria-selected', String(on));
+      tab.tabIndex = on ? 0 : -1;
+      document.getElementById(tab.getAttribute('aria-controls')!)!.hidden = !on;
+      if (on && focus) tab.focus();
+    }
+  }
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => selectPillar(tab.dataset.pillar!));
+    tab.addEventListener('keydown', (e) => {
+      const next = { ArrowRight: i + 1, ArrowDown: i + 1, ArrowLeft: i - 1, ArrowUp: i - 1, Home: 0, End: tabs.length - 1 }[e.key];
+      if (next === undefined) return;
+      e.preventDefault();
+      selectPillar(tabs[(next + tabs.length) % tabs.length].dataset.pillar!, true);
+    });
+  });
+
+  // Link produk di footer: pilih tab, lalu gulir ke section.
+  document.querySelectorAll<HTMLElement>('[data-select-pillar]').forEach((el) =>
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      selectPillar(el.dataset.selectPillar!);
+      document.getElementById('fitur')!.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+      document.getElementById(`tab-${el.dataset.selectPillar}`)!.focus({ preventScroll: true });
+    }),
+  );
+
+  // FAQ: satu terbuka dalam satu waktu.
+  const items = [...document.querySelectorAll<HTMLElement>('.faq-item')];
+  items.forEach((item) =>
+    item.querySelector('.faq-trigger')!.addEventListener('click', () => {
+      const buka = !item.classList.contains('active');
+      for (const it of items) {
+        const on = buka && it === item;
+        it.classList.toggle('active', on);
+        it.querySelector('.faq-trigger')!.setAttribute('aria-expanded', String(on));
+        (it.querySelector('.faq-content') as HTMLElement).inert = !on;
+      }
+    }),
+  );
+
+  // Modal artikel: <dialog> native (Escape dan fokus ditangani browser). Klik latar menutup.
+  document.querySelectorAll<HTMLElement>('[data-open-article]').forEach((btn) =>
+    btn.addEventListener('click', () => {
+      (document.getElementById(`article-${btn.dataset.openArticle}`) as HTMLDialogElement).showModal();
+      document.body.style.overflow = 'hidden';
+    }),
+  );
+  document.querySelectorAll<HTMLDialogElement>('dialog.article-modal').forEach((dlg) => {
+    dlg.addEventListener('click', (e) => {
+      const r = dlg.getBoundingClientRect();
+      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dlg.close();
+    });
+    dlg.addEventListener('close', () => (document.body.style.overflow = ''));
+  });
+</script>

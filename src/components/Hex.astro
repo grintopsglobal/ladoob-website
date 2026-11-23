@@ -1,0 +1,9 @@
+---
+// Motif identitas: heksagon dari logo, dipakai kecil sebagai penanda produk (DESIGN.md).
+interface Props { warna: string; class?: string }
+const { warna, class: cls = 'w-3.5 h-4' } = Astro.props;
+---
+
+<svg class:list={['shrink-0', cls]} viewBox="0 0 88 98" aria-hidden="true">
+  <path d="M40.5 2.2C42.66 0.95 45.34 0.95 47.5 2.2L81.5 21.83C83.66 23.08 85 25.39 85 27.89V67.11C85 69.61 83.66 71.92 81.5 73.17L47.5 92.8C45.34 94.05 42.66 94.05 40.5 92.8L6.5 73.17C4.34 71.92 3 69.61 3 67.11V27.89C3 25.39 4.34 23.08 6.5 21.83L40.5 2.2Z" fill={warna} />
+</svg>

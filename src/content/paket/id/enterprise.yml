@@ -1,0 +1,18 @@
+nama: "Enterprise"
+order: 3
+gaya: "biasa"
+pita: ""
+deskripsi: "Untuk travel multi-cabang dan penyelenggara Umrah/Haji skala besar."
+labelHarga: "Lisensi sekali bayar"
+harga: "Rp 55.000.000"
+labelMaintenance: "Cloud dan maintenance"
+maintenance: "Rp 10.800.000 / tahun"
+catatanMaintenance: "(dedicated cloud)"
+warnaCatatan: "navy"
+fitur:
+  - "**Keempat aplikasi**: Core Web, Compass, Masar, dan Agent"
+  - "Multi-cabang dan multi-gudang perlengkapan"
+  - "Komisi agen bertingkat (tiering dan override)"
+  - "API dan webhook untuk software akuntansi"
+  - "SLA uptime 99.9% dan dedicated account manager"
+pesanWa: ""

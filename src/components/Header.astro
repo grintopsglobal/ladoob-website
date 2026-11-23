@@ -1,0 +1,105 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { useTranslations, localizePath } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** true di beranda: anchor "#fitur"; halaman lain: "/id/#fitur". */
+  home?: boolean;
+  menu: { label: string; anchor: string }[];
+  ctaLabel: string;
+  ctaHref: string;
+}
+const { lang, home = false, menu, ctaLabel, ctaHref } = Astro.props;
+const t = useTranslations(lang);
+const to = (anchor: string) => (home ? `#${anchor}` : localizePath(lang, `#${anchor}`));
+const mobileLink = 'mobile-nav-link block px-3 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-ladoob-navy';
+---
+
+<header id="navbar" class="bg-white/95 backdrop-blur-md border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      <a href={to('hero')} class="flex items-center gap-3 group" aria-label={t('nav.home')}>
+        <Logo class="w-10 h-11 sm:w-11 sm:h-12 shrink-0 transition-transform duration-300 group-hover:scale-105" />
+        <div class="flex flex-col leading-none">
+          <div class="flex items-start">
+            <span class="font-heading font-extrabold text-2xl sm:text-[26px]/8 tracking-tight text-ladoob-navy">Ladoob</span>
+            <span class="text-[10px] font-bold text-ladoob-navy ml-0.5 mt-0.5">®</span>
+          </div>
+          <span class="text-[10px] sm:text-[11px] font-medium tracking-[0.06em] text-slate-500 mt-1">Beyond Smart Travel</span>
+        </div>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-600">
+        {menu.map((m) => <a href={to(m.anchor)} class="hover:text-ladoob-navy transition-colors py-2">{m.label}</a>)}
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <a
+          href={ctaHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden sm:inline-flex items-center gap-2 bg-ladoob-agent hover:bg-[#164237] text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors"
+        >
+          <Icon name="message-circle" class="w-4 h-4" />
+          <span>{ctaLabel}</span>
+        </a>
+
+        <button
+          id="mobileMenuBtn"
+          type="button"
+          class="lg:hidden inline-flex items-center justify-center p-2.5 rounded-xl text-ladoob-navy hover:bg-slate-100"
+          aria-controls="mobileMenuDrawer"
+          aria-expanded="false"
+          aria-label={t('nav.open')}
+          data-label-open={t('nav.open')}
+          data-label-close={t('nav.close')}
+        >
+          <Icon name="menu" class="menu-icon-open w-6 h-6" />
+          <Icon name="x" class="menu-icon-close w-6 h-6 hidden" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="mobileMenuDrawer" class="hidden lg:hidden bg-white border-t border-slate-100 shadow-xl">
+    <div class="px-4 pt-3 pb-6 space-y-1">
+      {menu.map((m) => <a href={to(m.anchor)} class={mobileLink}>{m.label}</a>)}
+      <div class="pt-3 border-t border-slate-100">
+        <a
+          href={ctaHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex items-center justify-center gap-2 w-full bg-ladoob-agent hover:bg-[#164237] text-white font-semibold px-4 py-3.5 rounded-lg"
+        >
+          <Icon name="message-circle" class="w-5 h-5" />
+          <span>{ctaLabel}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobileMenuBtn')!;
+  const drawer = document.getElementById('mobileMenuDrawer')!;
+
+  function setOpen(open: boolean) {
+    drawer.classList.toggle('hidden', !open);
+    btn.querySelector('.menu-icon-open')!.classList.toggle('hidden', open);
+    btn.querySelector('.menu-icon-close')!.classList.toggle('hidden', !open);
+    btn.setAttribute('aria-expanded', String(open));
+    btn.setAttribute('aria-label', (open ? btn.dataset.labelClose : btn.dataset.labelOpen) ?? '');
+  }
+
+  btn.addEventListener('click', () => setOpen(drawer.classList.contains('hidden')));
+  drawer.querySelectorAll('.mobile-nav-link').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !drawer.classList.contains('hidden')) {
+      setOpen(false);
+      btn.focus();
+    }
+  });
+</script>

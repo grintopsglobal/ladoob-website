@@ -1,0 +1,171 @@
+---
+// Ilustrasi layar aplikasi dengan data contoh (diberi keterangan). Ganti dengan screenshot asli bila tersedia (DESIGN.md).
+import Icon from './Icon.astro';
+import Hex from './Hex.astro';
+import { A } from '../lib/aksen';
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props { lang: Lang }
+const t = useTranslations(Astro.props.lang);
+const menuCore = ['Dasbor', 'Inventori', 'Pembelian', 'Penjualan', 'Finansial'];
+const kpi = [
+  { label: 'Pendapatan bersih', nilai: 'Rp 1,25 M', catatan: '+18,4%' },
+  { label: 'Total closing', nilai: '145 order', catatan: 'Tersinkron' },
+  { label: 'Margin bersih', nilai: '36,0%', catatan: 'HPP aman' },
+];
+---
+
+<figure class="lg:col-span-7 w-full">
+  <div class="relative lg:pb-16">
+    <!-- Dasbor Ladoob Core -->
+    <div class="rounded-2xl bg-white border border-slate-200 shadow-card overflow-hidden" aria-hidden="true">
+      <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200">
+        <div class="flex items-center gap-2">
+          <Hex warna={A.navy.hex} />
+          <span class="font-heading font-bold text-sm text-ladoob-navy">Ladoob Core</span>
+        </div>
+        <span class="text-[11px] text-slate-500">Kuartal berjalan</span>
+      </div>
+
+      <div class="grid grid-cols-12 min-h-[300px] sm:min-h-[330px]">
+        <div class="hidden sm:flex sm:col-span-4 bg-ladoob-navy text-white/70 p-4 flex-col justify-between">
+          <ul class="space-y-1 text-xs">
+            {menuCore.map((m, i) => (
+              <li class:list={['px-2.5 py-1.5 rounded-md', i === 0 && 'bg-white/10 text-white font-semibold']}>{m}</li>
+            ))}
+          </ul>
+          <div class="space-y-2 text-[11px] pt-3 border-t border-white/10">
+            <p class="flex items-center gap-2"><Hex warna={A.compass.hex} class="w-2.5 h-3" />Compass</p>
+            <p class="flex items-center gap-2"><Hex warna={A.masar.hex} class="w-2.5 h-3" />Masar مسار</p>
+            <p class="flex items-center gap-2"><Hex warna="#2F7A67" class="w-2.5 h-3" />Agent</p>
+            <p class="pt-2 text-white/60">Multi-kurs: IDR, USD, SAR</p>
+          </div>
+        </div>
+
+        <div class="col-span-12 sm:col-span-8 bg-slate-50 p-4 sm:p-5">
+          <p class="font-heading font-bold text-base text-ladoob-navy mb-3">Dasbor eksekutif</p>
+          <div class="grid grid-cols-3 gap-2 mb-4">
+            {kpi.map((k) => (
+              <div class="bg-white p-2.5 rounded-lg border border-slate-200">
+                <span class="text-[10px] text-slate-500 block truncate">{k.label}</span>
+                <span class="font-heading font-bold text-xs sm:text-sm text-ladoob-navy block mt-0.5">{k.nilai}</span>
+                <span class="text-[10px] text-emerald-700 block mt-0.5">{k.catatan}</span>
+              </div>
+            ))}
+          </div>
+          <div class="bg-white rounded-lg border border-slate-200 p-3">
+            <div class="flex items-center justify-between mb-1.5 text-[10px] text-slate-500">
+              <span class="font-semibold text-ladoob-navy text-[11px]">Penjualan vs realisasi HPP</span>
+              <span class="flex items-center gap-3">
+                <span class="inline-flex items-center gap-1"><i class="w-2 h-0.5 bg-ladoob-navy inline-block"></i>Omzet</span>
+                <span class="inline-flex items-center gap-1"><i class="w-2 h-0.5 bg-ladoob-agent inline-block"></i>Margin</span>
+              </span>
+            </div>
+            <svg class="w-full h-24" viewBox="0 0 320 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <line x1="0" y1="20" x2="320" y2="20" stroke="#E2E8F0" stroke-dasharray="3 3" />
+              <line x1="0" y1="48" x2="320" y2="48" stroke="#E2E8F0" stroke-dasharray="3 3" />
+              <line x1="0" y1="74" x2="320" y2="74" stroke="#E2E8F0" />
+              <path d="M0 64 C40 58, 70 46, 110 42 C150 38, 185 24, 230 18 C265 13, 295 10, 320 6" stroke="#183654" stroke-width="2.5" stroke-linecap="round" />
+              <path d="M0 70 C45 66, 80 58, 120 55 C160 52, 200 41, 245 36 C280 32, 300 29, 320 26" stroke="#1E5648" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kartu aplikasi: di bawah dasbor (< lg), menumpuk di sudut bawah (lg+) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 lg:mt-0 lg:block">
+      <div class="rounded-xl bg-white border border-slate-200 p-4 lg:absolute lg:-left-6 lg:bottom-0 lg:w-72 lg:shadow-card" aria-hidden="true">
+        <div class="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <Hex warna={A.masar.hex} />
+            <div class="leading-tight">
+              <p class="font-heading font-bold text-xs text-ladoob-masarText">Ladoob Masar</p>
+              <p class="text-[10px] text-slate-500">Aplikasi jamaah</p>
+            </div>
+          </div>
+          <span class="text-[10px] font-semibold text-slate-600 border border-slate-200 rounded px-1.5 py-0.5">Offline</span>
+        </div>
+        <div class="flex items-center justify-between gap-2 mb-3">
+          <div class="min-w-0">
+            <p class="text-xs font-semibold text-slate-800 truncate">H. Mursito</p>
+            <p class="text-[10px] text-slate-500 truncate">Kloter 04, Bus 02</p>
+          </div>
+          <span class="px-2 py-1 rounded-md bg-rose-600 text-white text-[10px] font-bold shrink-0">SOS</span>
+        </div>
+        <dl class="grid grid-cols-2 gap-2 text-[10px]">
+          <div class="bg-slate-50 rounded-md p-2">
+            <dt class="text-slate-500">Hotel Makkah</dt>
+            <dd class="font-semibold text-slate-800 mt-0.5">Hotel Bintang 5</dd>
+            <dd class="text-slate-600">Kamar 304</dd>
+          </div>
+          <div class="bg-slate-50 rounded-md p-2">
+            <dt class="text-slate-500">Status koper</dt>
+            <dd class="font-semibold text-slate-800 mt-0.5">Sudah tiba</dd>
+            <dd class="text-slate-600">Depan kamar</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="rounded-xl bg-white border border-slate-200 p-4 lg:absolute lg:-right-6 lg:-bottom-4 lg:w-72 lg:shadow-card">
+        <div class="flex items-center gap-2 pb-3 mb-3 border-b border-slate-100" aria-hidden="true">
+          <Hex warna={A.agent.hex} />
+          <div class="leading-tight">
+            <p class="font-heading font-bold text-xs text-ladoob-agent">Ladoob Agent</p>
+            <p class="text-[10px] text-slate-500">Aplikasi mitra</p>
+          </div>
+        </div>
+        <div class="mb-3" aria-hidden="true">
+          <div class="flex items-center justify-between gap-2">
+            <p class="text-xs font-semibold text-slate-800 truncate">Umrah Reguler 9 Hari</p>
+            <span class="text-[10px] text-slate-500 shrink-0">Sisa 12 seat</span>
+          </div>
+          <p class="text-[11px] text-slate-600 mt-1">Komisi <span class="font-semibold text-ladoob-agent">Rp 500.000</span> per jamaah</p>
+        </div>
+        <div class="flex items-center justify-between gap-1.5 bg-slate-50 border border-slate-200 rounded-md px-2.5 py-1.5">
+          <span id="heroReferralText" class="text-[10px] font-mono text-slate-600 truncate">ladoob.app/r/budi123</span>
+          <button
+            type="button"
+            id="copyReferralBtn"
+            data-label={t('copy.label')}
+            data-done={t('copy.done')}
+            class="relative before:absolute before:-inset-y-[11px] before:inset-x-0 before:content-[''] inline-flex items-center gap-1 px-2 py-1 rounded bg-ladoob-agent hover:bg-[#164237] text-white text-[10px] font-semibold shrink-0 transition-colors"
+          >
+            <Icon name="copy" class="w-2.5 h-2.5" />
+            <span id="copyReferralLabel" aria-live="polite">{t('copy.label')}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <figcaption class="mt-4 text-xs text-slate-500">{t('visual.contoh')}</figcaption>
+</figure>
+
+<script>
+  const btn = document.getElementById('copyReferralBtn')!;
+  const label = document.getElementById('copyReferralLabel')!;
+
+  async function salin(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Fallback untuk konteks tanpa Clipboard API (http lokal, browser lama).
+      const el = document.createElement('textarea');
+      el.value = text;
+      el.setAttribute('readonly', '');
+      el.style.position = 'fixed';
+      el.style.opacity = '0';
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      el.remove();
+    }
+  }
+
+  btn.addEventListener('click', async () => {
+    await salin(document.getElementById('heroReferralText')!.textContent ?? '');
+    label.textContent = btn.dataset.done ?? '';
+    setTimeout(() => (label.textContent = btn.dataset.label ?? ''), 1800);
+  });
+</script>

@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ladoob — Beyond Smart Travel | Platform Manajemen Travel & Umrah Terpadu</title>
+  <meta name="description" content="Kendali penuh operasional travel wisata & Umrah dalam satu ekosistem terpadu: Ladoob Core, Compass, Masar (مسار), dan Agent App." />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Konfigurasi Tema Tailwind -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            ladoob: {
+              navy: '#183654',
+              navyDark: '#0F253B',
+              navyLight: '#234B73',
+              compass: '#B8332A',
+              compassLight: '#FDF2F1',
+              masar: '#C27838',
+              masarLight: '#FDF7F2',
+              agent: '#1E5648',
+              agentLight: '#F1F8F6',
+              slateBg: '#F8FAFC',
+            }
+          },
+          boxShadow: {
+            'soft': '0 10px 30px -10px rgba(24, 54, 84, 0.08)',
+            'card': '0 22px 45px -15px rgba(24, 54, 84, 0.14)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Pengaturan tipografi dasar: TANPA overflow-x: hidden di html/body agar position: fixed selalu presisi */
+    html, body {
+      font-family: 'Inter', sans-serif;
+      color: #1E293B;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Fixed Top Header Permanen */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 9999;
+    }
+
+    /* Offset anchor scroll agar judul section tidak tertutup fixed header */
+    section[id] {
+      scroll-margin-top: 84px;
+    }
+
+    /* Animasi Floating Halus untuk 3 Mockup di Hero */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+    @keyframes floatMedium {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-9px); }
+    }
+    @keyframes floatDelayed {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .animate-float-slow {
+      animation: floatSlow 5.5s ease-in-out infinite;
+    }
+    .animate-float-medium {
+      animation: floatMedium 4.8s ease-in-out 0.8s infinite;
+    }
+    .animate-float-delayed {
+      animation: floatDelayed 5.2s ease-in-out 1.6s infinite;
+    }
+
+    /* Jeda animasi saat kursor diarahkan agar mudah dibaca & diklik */
+    .animate-float-slow:hover,
+    .animate-float-medium:hover,
+    .animate-float-delayed:hover {
+      animation-play-state: paused;
+    }
+
+    /* Transisi halus untuk accordion FAQ */
+    .faq-content {
+      transition: max-height 0.3s ease-out, opacity 0.25s ease-out;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+    .faq-item.active .faq-content {
+      max-height: 360px;
+      opacity: 1;
+    }
+    .faq-item.active .faq-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Hilangkan scrollbar pada horizontal tab di layar mobile */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-800 antialiased selection:bg-ladoob-navy selection:text-white">
+
+  <!-- ===================================================================== -->
+  <!-- 1. FIXED TOP HEADER & MOBILE HAMBURGER MENU                           -->
+  <!-- ===================================================================== -->
+  <header id="navbar" class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs transition-shadow duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Logo SVG Kustom Ladoob + Tagline "Beyond Smart Travel" -->
+        <a href="#hero" class="flex items-center gap-3 group focus:outline-none" aria-label="Ladoob Beranda">
+          <svg class="w-10 h-11 sm:w-11 sm:h-12 shrink-0 transition-transform duration-300 group-hover:scale-105" viewBox="0 0 88 98" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M40.5 2.2C42.66 0.95 45.34 0.95 47.5 2.2L81.5 21.83C83.66 23.08 85 25.39 85 27.89V67.11C85 69.61 83.66 71.92 81.5 73.17L47.5 92.8C45.34 94.05 42.66 94.05 40.5 92.8L6.5 73.17C4.34 71.92 3 69.61 3 67.11V27.89C3 25.39 4.34 23.08 6.5 21.83L40.5 2.2Z" fill="#183654"/>
+            <circle cx="44" cy="47.5" r="23.5" stroke="white" stroke-width="2.1" stroke-opacity="0.95"/>
+            <circle cx="44" cy="47.5" r="19" stroke="white" stroke-width="1" stroke-opacity="0.55"/>
+            <line x1="44" y1="24" x2="44" y2="28.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="44" y1="66.5" x2="44" y2="71" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="20.5" y1="47.5" x2="25" y2="47.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="63" y1="47.5" x2="67.5" y2="47.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M27 59.5C32.5 63.5 41 61 45 53" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M57.8 33.7C58.6 34.5 58.3 36.1 57.1 37.3L51.8 42.6L54.9 54.4L52.3 57L47.5 46.9L42.3 52.1L43.2 56.5L41.2 58.5L38.4 53.6L33.5 50.8L35.5 48.8L39.9 49.7L45.1 44.5L35 39.7L37.6 37.1L49.4 40.2L54.7 34.9C55.9 33.7 57 32.9 57.8 33.7Z" fill="white"/>
+          </svg>
+          <div class="flex flex-col leading-none">
+            <div class="flex items-start">
+              <span class="font-heading font-extrabold text-2xl sm:text-[26px] tracking-tight text-ladoob-navy">Ladoob</span>
+              <span class="text-[10px] font-bold text-ladoob-navy ml-0.5 mt-0.5">®</span>
+            </div>
+            <span class="text-[10px] sm:text-[11px] font-medium tracking-[0.06em] text-slate-500 mt-1">Beyond Smart Travel</span>
+          </div>
+        </a>
+
+        <!-- Navigasi Desktop -->
+        <nav class="hidden lg:flex items-center gap-7 text-sm font-medium text-slate-600">
+          <a href="#fitur" class="hover:text-ladoob-navy transition-colors py-2">Fitur &amp; Ekosistem</a>
+          <a href="#manfaat" class="hover:text-ladoob-navy transition-colors py-2">Manfaat Bisnis</a>
+          <a href="#harga" class="hover:text-ladoob-navy transition-colors py-2">Harga</a>
+          <a href="#blog" class="hover:text-ladoob-navy transition-colors py-2">Blog</a>
+          <a href="#faq" class="hover:text-ladoob-navy transition-colors py-2">FAQ</a>
+        </nav>
+
+        <!-- Tombol CTA Desktop & Tombol Hamburger Mobile -->
+        <div class="flex items-center gap-2.5">
+          <a
+            href="https://wa.me/6281234567890?text=Halo%20tim%20Ladoob,%20saya%20ingin%20coba%20dan%20jadwalkan%20demo%20platform%20Ladoob."
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hidden sm:inline-flex items-center gap-2 bg-ladoob-agent hover:bg-[#164237] text-white text-sm font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md"
+          >
+            <i data-lucide="message-circle" class="w-4 h-4"></i>
+            <span>Coba Sekarang</span>
+          </a>
+
+          <!-- Mobile Hamburger Button -->
+          <button
+            id="mobileMenuBtn"
+            type="button"
+            class="lg:hidden inline-flex items-center justify-center p-2.5 rounded-xl text-ladoob-navy hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-ladoob-navy/20"
+            aria-controls="mobileMenuDrawer"
+            aria-expanded="false"
+            aria-label="Buka menu navigasi"
+          >
+            <i id="menuIconOpen" data-lucide="menu" class="w-6 h-6"></i>
+            <i id="menuIconClose" data-lucide="x" class="w-6 h-6 hidden"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Drawer -->
+    <div id="mobileMenuDrawer" class="hidden lg:hidden bg-white border-t border-slate-100 shadow-xl">
+      <div class="px-4 pt-3 pb-6 space-y-1">
+        <a href="#fitur" class="mobile-nav-link block px-3 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-ladoob-navy">Fitur &amp; Ekosistem</a>
+        <a href="#manfaat" class="mobile-nav-link block px-3 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-ladoob-navy">Manfaat Bisnis</a>
+        <a href="#harga" class="mobile-nav-link block px-3 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-ladoob-navy">Harga</a>
+        <a href="#blog" class="mobile-nav-link block px-3 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-ladoob-navy">Blog</a>
+        <a href="#faq" class="mobile-nav-link block px-3 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-ladoob-navy">FAQ</a>
+        <div class="pt-3 border-t border-slate-100">
+          <a
+            href="https://wa.me/6281234567890?text=Halo%20tim%20Ladoob,%20saya%20ingin%20coba%20dan%20jadwalkan%20demo%20platform%20Ladoob."
+            target="_blank"
+            rel="noopener noreferrer"
+            class="flex items-center justify-center gap-2 w-full bg-ladoob-agent hover:bg-[#164237] text-white font-semibold px-4 py-3.5 rounded-xl shadow-sm"
+          >
+            <i data-lucide="message-circle" class="w-5 h-5"></i>
+            <span>Coba Sekarang</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Offset top pt-[80px] menyesuaikan tinggi fixed header h-20 -->
+  <main class="pt-[80px]" style="overflow-x: clip;">
+
+    <!-- ===================================================================== -->
+    <!-- 2. HERO SECTION (BALANCED 12-COL GRID + NON-OVERLAPPING FLOATING UI)   -->
+    <!-- ===================================================================== -->
+    <section id="hero" class="relative bg-gradient-to-b from-slate-50 to-white py-12 lg:py-20 border-b border-slate-200/60" style="overflow-x: clip;">
+      <!-- Dekorasi Cahaya Latar Lembut -->
+      <div class="pointer-events-none absolute -top-24 right-0 w-[480px] h-[480px] rounded-full bg-ladoob-navy/[0.035] blur-3xl"></div>
+      <div class="pointer-events-none absolute bottom-0 -left-20 w-[360px] h-[360px] rounded-full bg-ladoob-masar/[0.04] blur-3xl"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          
+          <!-- KOLOM KIRI (lg:col-span-5): Narasi Utama, CTA & Trust Highlights -->
+          <div class="lg:col-span-5 text-left">
+            <!-- Badge Pill -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-ladoob-navy/[0.06] border border-ladoob-navy/10 text-ladoob-navy text-xs font-bold tracking-wide mb-5">
+              <span class="w-2 h-2 rounded-full bg-ladoob-agent animate-pulse"></span>
+              <span>Ekosistem Manajemen Travel 4-in-1</span>
+            </div>
+
+            <!-- Main H1 Headline -->
+            <h1 class="font-heading text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-ladoob-navy leading-[1.16] tracking-tight mb-5">
+              Beyond Smart Travel: Kendali Penuh Operasional &amp; Perjalanan
+            </h1>
+
+            <!-- Value Proposition Paragraph -->
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed mb-7">
+              Hubungkan operasional kantor pusat (<strong class="text-ladoob-navy font-semibold">Ladoob Core</strong>), aplikasi pendamping wisatawan &amp; jamaah (<strong class="text-ladoob-compass font-semibold">Ladoob Compass</strong> &amp; <strong class="text-ladoob-masar font-semibold">Ladoob Masar</strong>), serta jaringan mitra penjualan (<strong class="text-ladoob-agent font-semibold">Ladoob Agent</strong>) dalam satu platform terpadu.
+            </p>
+
+            <!-- Primary CTA Group -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-8">
+              <a
+                href="https://wa.me/6281234567890?text=Halo%20tim%20Ladoob,%20saya%20ingin%20coba%20sekarang%20dan%20lihat%20demo%20ekosistem%20Ladoob%20(Core,%20Compass,%20Masar,%20Agent)."
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center gap-2.5 bg-ladoob-navy hover:bg-ladoob-navyDark text-white font-semibold px-6 py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-sm sm:text-base"
+              >
+                <i data-lucide="message-circle" class="w-5 h-5 text-emerald-300"></i>
+                <span>Coba Sekarang</span>
+              </a>
+
+              <a
+                href="#harga"
+                class="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 text-ladoob-navy border border-slate-300 font-semibold px-5 py-3.5 rounded-xl transition-all duration-200 text-sm sm:text-base"
+              >
+                <span>Lihat Paket Harga</span>
+                <i data-lucide="arrow-down" class="w-4 h-4"></i>
+              </a>
+            </div>
+
+            <!-- Clean Trust Highlights Row -->
+            <div class="pt-5 border-t border-slate-200/80 grid grid-cols-3 gap-2 sm:gap-4">
+              <div class="flex items-start gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-ladoob-navy shrink-0 mt-0.5"></i>
+                <span class="text-xs font-semibold text-slate-700 leading-snug">Lisensi Sekali Bayar</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i data-lucide="wifi-off" class="w-4 h-4 text-ladoob-masar shrink-0 mt-0.5"></i>
+                <span class="text-xs font-semibold text-slate-700 leading-snug">Mode Offline Jamaah</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <i data-lucide="share-2" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                <span class="text-xs font-semibold text-slate-700 leading-snug">Portal Agen Otomatis</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- KOLOM KANAN (lg:col-span-7): Structured Floating Visual Showcase Stage -->
+          <div class="lg:col-span-7 relative w-full lg:pb-14">
+            
+            <!-- 1. MAIN CENTERPIECE WINDOW: LADOOB CORE (WEB DASHBOARD) -->
+            <div class="w-full rounded-2xl bg-white border border-slate-200/90 shadow-card overflow-hidden animate-float-slow">
+              <!-- Browser Top Bar -->
+              <div class="bg-[#0F1E2E] px-4 py-2.5 flex items-center justify-between border-b border-white/10">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                  <span class="ml-2 text-[11px] font-medium text-slate-300 tracking-wide">core.ladoob.com</span>
+                </div>
+                <span class="inline-flex items-center gap-1.5 text-[10px] font-semibold text-emerald-300 bg-emerald-500/15 border border-emerald-400/25 px-2.5 py-0.5 rounded-full">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  Live Sync Aktif
+                </span>
+              </div>
+
+              <!-- Layout Split: Dark Navy Sidebar + Executive Dashboard Content -->
+              <div class="grid grid-cols-12 min-h-[310px] sm:min-h-[340px]">
+                
+                <!-- Dark Navy Sidebar (Hidden on super narrow phones < sm, visible sm+) -->
+                <div class="hidden sm:flex sm:col-span-4 lg:col-span-4 bg-[#102337] text-slate-300 p-3.5 flex-col justify-between">
+                  <div>
+                    <!-- Brand Header in Sidebar -->
+                    <div class="flex items-center gap-2 pb-3 mb-3 border-b border-white/10">
+                      <div class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 flex items-center justify-center font-heading font-extrabold text-sm">
+                        L
+                      </div>
+                      <div class="leading-tight">
+                        <p class="font-heading font-bold text-xs text-white">Ladoob <span class="text-emerald-400">Core</span></p>
+                        <p class="text-[9px] text-slate-400">Executive Control</p>
+                      </div>
+                    </div>
+
+                    <!-- Navigation Items -->
+                    <ul class="space-y-1 text-[11px] font-medium">
+                      <li class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white/10 text-white font-semibold">
+                        <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-emerald-400"></i>
+                        <span>Dasbor</span>
+                      </li>
+                      <li class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-300">
+                        <i data-lucide="package" class="w-3.5 h-3.5 text-slate-400"></i>
+                        <span>Inventori</span>
+                      </li>
+                      <li class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-300">
+                        <i data-lucide="shopping-bag" class="w-3.5 h-3.5 text-slate-400"></i>
+                        <span>Pembelian</span>
+                      </li>
+                      <li class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-300">
+                        <i data-lucide="receipt" class="w-3.5 h-3.5 text-slate-400"></i>
+                        <span>Penjualan</span>
+                      </li>
+                      <li class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-300">
+                        <i data-lucide="wallet" class="w-3.5 h-3.5 text-slate-400"></i>
+                        <span>Finansial</span>
+                      </li>
+                    </ul>
+
+                    <!-- Sub-App Links -->
+                    <div class="mt-3 pt-2.5 border-t border-white/10 space-y-1 text-[10px]">
+                      <div class="flex items-center justify-between px-2.5 py-1 rounded bg-ladoob-compass/20 text-rose-200">
+                        <span class="font-semibold">Compass</span>
+                        <span class="text-[9px] opacity-80">Wisata</span>
+                      </div>
+                      <div class="flex items-center justify-between px-2.5 py-1 rounded bg-ladoob-masar/20 text-amber-200">
+                        <span class="font-semibold">Masar مسار</span>
+                        <span class="text-[9px] opacity-80">Umrah</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pt-2 border-t border-white/10 flex items-center gap-2 text-[10px] text-slate-400">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span>Multi-Kurs: IDR • USD • SAR</span>
+                  </div>
+                </div>
+
+                <!-- Executive View Main Panel -->
+                <div class="col-span-12 sm:col-span-8 lg:col-span-8 bg-slate-50/70 p-4 sm:p-5 flex flex-col justify-between">
+                  <div>
+                    <!-- Header Row -->
+                    <div class="flex items-center justify-between gap-2 mb-3.5">
+                      <div>
+                        <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Ringkasan Real-Time</p>
+                        <h2 class="font-heading font-bold text-sm sm:text-base text-ladoob-navy">Dasbor Eksekutif</h2>
+                      </div>
+                      <span class="text-[10px] font-semibold bg-white border border-slate-200 text-slate-600 px-2.5 py-1 rounded-lg">
+                        Kuartal Berjalan
+                      </span>
+                    </div>
+
+                    <!-- 3 KPI Cards -->
+                    <div class="grid grid-cols-3 gap-2 sm:gap-2.5 mb-4">
+                      <div class="bg-white p-2.5 rounded-xl border border-slate-200/80 shadow-2xs">
+                        <span class="text-[10px] text-slate-500 block truncate">Pendapatan Bersih</span>
+                        <span class="font-heading font-extrabold text-xs sm:text-sm text-ladoob-navy mt-0.5 block">Rp 1,25 M</span>
+                        <span class="inline-block text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded mt-1">+18,4%</span>
+                      </div>
+                      <div class="bg-white p-2.5 rounded-xl border border-slate-200/80 shadow-2xs">
+                        <span class="text-[10px] text-slate-500 block truncate">Total Closing</span>
+                        <span class="font-heading font-extrabold text-xs sm:text-sm text-ladoob-navy mt-0.5 block">145 Order</span>
+                        <span class="inline-block text-[9px] font-bold text-sky-700 bg-sky-50 px-1.5 py-0.5 rounded mt-1">100% Sync</span>
+                      </div>
+                      <div class="bg-white p-2.5 rounded-xl border border-slate-200/80 shadow-2xs">
+                        <span class="text-[10px] text-slate-500 block truncate">Net Profit Margin</span>
+                        <span class="font-heading font-extrabold text-xs sm:text-sm text-ladoob-agent mt-0.5 block">36.0%</span>
+                        <span class="inline-block text-[9px] font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded mt-1">HPP Aman</span>
+                      </div>
+                    </div>
+
+                    <!-- Clean SVG Area / Line Trend Chart -->
+                    <div class="bg-white rounded-xl border border-slate-200/80 p-3">
+                      <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-[11px] font-bold text-ladoob-navy">Tren Penjualan vs Realisasi HPP</span>
+                        <div class="flex items-center gap-3 text-[10px] text-slate-500">
+                          <span class="inline-flex items-center gap-1"><i class="w-2 h-2 rounded-full bg-ladoob-navy inline-block"></i> Omzet</span>
+                          <span class="inline-flex items-center gap-1"><i class="w-2 h-2 rounded-full bg-emerald-500 inline-block"></i> Margin</span>
+                        </div>
+                      </div>
+                      <svg class="w-full h-24 overflow-visible" viewBox="0 0 320 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <linearGradient id="omzetGrad" x1="0" y1="0" x2="0" y2="84" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#183654" stop-opacity="0.22" />
+                            <stop offset="100%" stop-color="#183654" stop-opacity="0.0" />
+                          </linearGradient>
+                        </defs>
+                        <!-- Grid Lines -->
+                        <line x1="0" y1="20" x2="320" y2="20" stroke="#E2E8F0" stroke-dasharray="3 3" />
+                        <line x1="0" y1="48" x2="320" y2="48" stroke="#E2E8F0" stroke-dasharray="3 3" />
+                        <line x1="0" y1="74" x2="320" y2="74" stroke="#E2E8F0" />
+                        <!-- Area Fill -->
+                        <path d="M0 64 C40 58, 70 46, 110 42 C150 38, 185 24, 230 18 C265 13, 295 10, 320 6 L320 74 L0 74 Z" fill="url(#omzetGrad)" />
+                        <!-- Primary Line -->
+                        <path d="M0 64 C40 58, 70 46, 110 42 C150 38, 185 24, 230 18 C265 13, 295 10, 320 6" stroke="#183654" stroke-width="2.5" stroke-linecap="round" />
+                        <!-- Secondary Margin Line -->
+                        <path d="M0 70 C45 66, 80 58, 120 55 C160 52, 200 41, 245 36 C280 32, 300 29, 320 26" stroke="#10B981" stroke-width="2" stroke-linecap="round" />
+                        <!-- Highlight Dots -->
+                        <circle cx="110" cy="42" r="3" fill="#183654" />
+                        <circle cx="230" cy="18" r="3" fill="#183654" />
+                        <circle cx="320" cy="6" r="3.5" fill="#183654" stroke="white" stroke-width="1.5" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CONTAINER 2 FLOATING COMPANION CARDS:
+                 - Mobile & Tablet (< lg): Tersusun rapi dalam grid 2 kolom di bawah Ladoob Core (tanpa overlap!)
+                 - Desktop (lg+): Melayang presisi di sudut kiri-bawah & kanan-bawah tanpa bertabrakan -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 lg:mt-0 lg:block">
+              
+              <!-- 2. FLOATING COMPANION CARD LEFT/BOTTOM: LADOOB MASAR (مسار) -->
+              <div class="w-full sm:w-auto lg:w-72 rounded-2xl bg-white border border-amber-200/90 shadow-xl p-3.5 animate-float-medium lg:absolute lg:-left-5 lg:bottom-0 z-20">
+                <!-- Header Badge -->
+                <div class="flex items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-amber-100">
+                  <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-lg bg-ladoob-masar text-white flex items-center justify-center shrink-0">
+                      <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
+                    </span>
+                    <div class="leading-tight">
+                      <p class="font-heading font-bold text-xs text-ladoob-masar">Ladoob Masar • <span class="font-semibold">مسار</span></p>
+                      <p class="text-[10px] text-slate-500">Aplikasi Jamaah Umrah</p>
+                    </div>
+                  </div>
+                  <span class="text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    OFFLINE READY
+                  </span>
+                </div>
+
+                <!-- Pilgrim Identity & SOS Quick Bar -->
+                <div class="flex items-center justify-between gap-2 bg-ladoob-masarLight/70 rounded-xl px-2.5 py-2 mb-2.5">
+                  <div class="min-w-0">
+                    <p class="text-xs font-bold text-slate-800 truncate">H. Mursito</p>
+                    <p class="text-[10px] text-slate-500 truncate">Kloter 04 • Bus 02</p>
+                  </div>
+                  <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-rose-600 text-white text-[10px] font-extrabold tracking-wide shrink-0 shadow-2xs">
+                    <i data-lucide="alert-circle" class="w-3 h-3"></i>
+                    SOS
+                  </span>
+                </div>
+
+                <!-- Hotel & Status Koper -->
+                <div class="grid grid-cols-2 gap-2 text-[10px]">
+                  <div class="bg-slate-50 rounded-lg p-2 border border-slate-100">
+                    <span class="text-slate-400 block">Hotel Makkah</span>
+                    <span class="font-bold text-slate-800 block truncate mt-0.5">Pullman Zamzam</span>
+                    <span class="text-ladoob-masar font-semibold">Kamar 304</span>
+                  </div>
+                  <div class="bg-slate-50 rounded-lg p-2 border border-slate-100">
+                    <span class="text-slate-400 block">Status Koper</span>
+                    <span class="inline-flex items-center gap-1 font-bold text-emerald-700 mt-0.5">
+                      <i data-lucide="check-circle-2" class="w-3 h-3"></i>
+                      Sudah Tiba
+                    </span>
+                    <span class="text-slate-500 block">Depan Kamar</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 3. FLOATING COMPANION CARD RIGHT/BOTTOM: LADOOB AGENT -->
+              <div class="w-full sm:w-auto lg:w-72 rounded-2xl bg-white border border-emerald-200/90 shadow-xl p-3.5 animate-float-delayed lg:absolute lg:-right-4 lg:-bottom-2 z-20">
+                <!-- Header Badge -->
+                <div class="flex items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-emerald-100">
+                  <div class="flex items-center gap-2">
+                    <span class="w-7 h-7 rounded-lg bg-ladoob-agent text-white flex items-center justify-center shrink-0">
+                      <i data-lucide="users" class="w-3.5 h-3.5"></i>
+                    </span>
+                    <div class="leading-tight">
+                      <p class="font-heading font-bold text-xs text-ladoob-agent">Ladoob Agent</p>
+                      <p class="text-[10px] text-slate-500">Portal Mitra &amp; Affiliator</p>
+                    </div>
+                  </div>
+                  <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-ladoob-agentLight text-ladoob-agent border border-emerald-200">
+                    Mitra Aktif
+                  </span>
+                </div>
+
+                <!-- Package Card & Commission Highlight -->
+                <div class="bg-ladoob-agentLight/70 border border-emerald-200/60 rounded-xl p-2.5 mb-2.5">
+                  <div class="flex items-center justify-between gap-2 mb-1">
+                    <p class="text-xs font-bold text-slate-800 truncate">Umroh Reguler 9 Hari</p>
+                    <span class="text-[9px] font-bold text-emerald-800 bg-white px-1.5 py-0.5 rounded shrink-0">12 Seat</span>
+                  </div>
+                  <div class="flex items-center justify-between text-[11px]">
+                    <span class="text-slate-500">Komisi Mitra:</span>
+                    <span class="font-heading font-extrabold text-ladoob-agent">Rp 500.000 <span class="font-normal text-[10px] text-slate-500">/ jamaah</span></span>
+                  </div>
+                </div>
+
+                <!-- Referral Share Bar -->
+                <div class="flex items-center justify-between gap-1.5 bg-slate-50 border border-slate-200/80 rounded-lg px-2.5 py-1.5">
+                  <span id="heroReferralText" class="text-[10px] font-mono text-slate-600 truncate">ladoob.app/r/budi123</span>
+                  <button
+                    type="button"
+                    id="copyReferralBtn"
+                    onclick="copyHeroReferral()"
+                    class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-ladoob-agent hover:bg-[#164237] text-white text-[10px] font-semibold shrink-0 transition-colors"
+                  >
+                    <i data-lucide="copy" class="w-2.5 h-2.5"></i>
+                    <span id="copyReferralLabel">Salin Link</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 3. FITUR & 4 PILAR EKOSISTEM LADOOB (INTERACTIVE TABS + GRID VIEW)    -->
+    <!-- ===================================================================== -->
+    <section id="fitur" class="py-16 sm:py-24 bg-ladoob-slateBg border-b border-slate-200/70" style="overflow-x: clip;">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header Section -->
+        <div class="max-w-3xl mx-auto text-center mb-12">
+          <span class="inline-block text-xs font-bold uppercase tracking-wider text-ladoob-navy bg-ladoob-navy/[0.07] px-3 py-1 rounded-full mb-3">
+            Arsitektur 4 Pilar Terintegrasi
+          </span>
+          <h2 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-ladoob-navy tracking-tight mb-4">
+            Satu Pusat Kendali, Tiga Aplikasi Lapangan yang Saling Terhubung
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+            Setiap lini bisnis travel Anda mendapatkan pengalaman digital yang dirancang khusus sesuai perannya—tanpa duplikasi input data.
+          </p>
+        </div>
+
+        <!-- Tab Navigasi Interaktif (Mobile Horizontal Scrollable) -->
+        <div class="flex overflow-x-auto no-scrollbar justify-start sm:justify-center gap-2.5 pb-3 mb-8" role="tablist" aria-label="Pilih Pilar Ekosistem Ladoob">
+          <button
+            type="button"
+            data-pillar="core"
+            class="pillar-tab active shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-ladoob-navy text-white shadow-sm"
+          >
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            <span>1. Ladoob Core (Web)</span>
+          </button>
+
+          <button
+            type="button"
+            data-pillar="compass"
+            class="pillar-tab shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 border border-slate-200 hover:border-ladoob-compass/40"
+          >
+            <i data-lucide="compass" class="w-4 h-4 text-ladoob-compass"></i>
+            <span>2. Ladoob Compass</span>
+          </button>
+
+          <button
+            type="button"
+            data-pillar="masar"
+            class="pillar-tab shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 border border-slate-200 hover:border-ladoob-masar/40"
+          >
+            <i data-lucide="navigation" class="w-4 h-4 text-ladoob-masar"></i>
+            <span>3. Ladoob Masar (مسار)</span>
+          </button>
+
+          <button
+            type="button"
+            data-pillar="agent"
+            class="pillar-tab shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 border border-slate-200 hover:border-ladoob-agent/40"
+          >
+            <i data-lucide="briefcase" class="w-4 h-4 text-ladoob-agent"></i>
+            <span>4. Ladoob Agent</span>
+          </button>
+        </div>
+
+        <!-- Panel Detail Interaktif Pilar Terpilih -->
+        <div id="pillarDetailContainer" class="bg-white rounded-2xl border border-slate-200/90 shadow-soft p-6 sm:p-8 lg:p-10 mb-12 transition-all">
+          <!-- Konten diisi & diperbarui oleh JavaScript -->
+        </div>
+
+        <!-- Ringkasan Grid 4 Kartu Pilar Sekaligus -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <!-- Card 1: Core -->
+          <div class="bg-white rounded-2xl p-6 border-t-4 border-t-ladoob-navy border border-slate-200/80 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-ladoob-navy/10 text-ladoob-navy flex items-center justify-center mb-4">
+                <i data-lucide="server" class="w-5 h-5"></i>
+              </div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-ladoob-navy">Web Dashboard • Owner &amp; Pusat</span>
+              <h3 class="font-heading font-bold text-lg text-slate-900 mt-1 mb-2">Ladoob Core</h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                Pusat kendali manajemen paket &amp; HPP (tiket, hotel, visa, LA), akuntansi &amp; arus kas, manifest otomatis, kontrol margin, dan laporan real-time.
+              </p>
+            </div>
+            <button type="button" onclick="selectPillar('core')" class="text-xs font-bold text-ladoob-navy inline-flex items-center gap-1 hover:underline">
+              <span>Lihat detail modul</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Card 2: Compass -->
+          <div class="bg-white rounded-2xl p-6 border-t-4 border-t-ladoob-compass border border-slate-200/80 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-ladoob-compassLight text-ladoob-compass flex items-center justify-center mb-4">
+                <i data-lucide="compass" class="w-5 h-5"></i>
+              </div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-ladoob-compass">Customer App • Wisata Umum</span>
+              <h3 class="font-heading font-bold text-lg text-slate-900 mt-1 mb-2">Ladoob Compass</h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                Aplikasi mobile untuk open trip, private tour &amp; corporate. Itinerary digital interaktif, e-ticket &amp; voucher hotel, cicilan, hingga live trip update.
+              </p>
+            </div>
+            <button type="button" onclick="selectPillar('compass')" class="text-xs font-bold text-ladoob-compass inline-flex items-center gap-1 hover:underline">
+              <span>Lihat detail modul</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Card 3: Masar -->
+          <div class="bg-white rounded-2xl p-6 border-t-4 border-t-ladoob-masar border border-slate-200/80 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-ladoob-masarLight text-ladoob-masar flex items-center justify-center mb-4">
+                <i data-lucide="navigation" class="w-5 h-5"></i>
+              </div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-ladoob-masar">Customer App • Umrah &amp; Haji</span>
+              <h3 class="font-heading font-bold text-lg text-slate-900 mt-1 mb-2">Ladoob Masar <span class="text-ladoob-masar font-normal">مسار</span></h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                Aplikasi khusus jamaah Umrah &amp; Haji. Panduan manasik digital &amp; doa harian, jadwal pembagian kamar/bus, pelacakan koper &amp; grup, serta notifikasi ibadah.
+              </p>
+            </div>
+            <button type="button" onclick="selectPillar('masar')" class="text-xs font-bold text-ladoob-masar inline-flex items-center gap-1 hover:underline">
+              <span>Lihat detail modul</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Card 4: Agent -->
+          <div class="bg-white rounded-2xl p-6 border-t-4 border-t-ladoob-agent border border-slate-200/80 shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-ladoob-agentLight text-ladoob-agent flex items-center justify-center mb-4">
+                <i data-lucide="users" class="w-5 h-5"></i>
+              </div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-ladoob-agent">Mitra App • Agen &amp; Affiliator</span>
+              <h3 class="font-heading font-bold text-lg text-slate-900 mt-1 mb-2">Ladoob Agent</h3>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+                Portal &amp; aplikasi mobile untuk agen, reseller, dan affiliator. Katalog paket siap jual dengan link afiliasi unik, booking instan, dan pelacakan komisi transparan.
+              </p>
+            </div>
+            <button type="button" onclick="selectPillar('agent')" class="text-xs font-bold text-ladoob-agent inline-flex items-center gap-1 hover:underline">
+              <span>Lihat detail modul</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 4. MANFAAT BISNIS (BUSINESS VALUE & ROI SECTION)                      -->
+    <!-- ===================================================================== -->
+    <section id="manfaat" class="py-16 sm:py-24 bg-white" style="overflow-x: clip;">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          
+          <!-- Sisi Kiri: Narasi Strategis & Metrik Dampak -->
+          <div class="lg:col-span-5">
+            <span class="inline-block text-xs font-bold uppercase tracking-wider text-ladoob-agent bg-ladoob-agentLight px-3 py-1 rounded-full mb-3">
+              Business Value &amp; ROI
+            </span>
+            <h2 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-ladoob-navy tracking-tight mb-4">
+              Dirancang untuk Melindungi Profit &amp; Mempercepat Skala Bisnis Travel Anda
+            </h2>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed mb-8">
+              Banyak biro perjalanan kehilangan margin bukan karena kurang jamaah atau peserta, melainkan karena kebocoran HPP dan lambatnya proses administrasi manual.
+            </p>
+
+            <!-- Kartu Metrik Dampak Terukur -->
+            <div class="bg-ladoob-navy rounded-2xl p-6 text-white shadow-card">
+              <p class="text-xs uppercase tracking-wider text-slate-300 font-semibold mb-4">Dampak Operasional Terukur</p>
+              <div class="grid grid-cols-2 gap-5">
+                <div class="border-r border-white/15 pr-4">
+                  <p class="font-heading text-2xl sm:text-3xl font-extrabold text-white">75%</p>
+                  <p class="text-xs text-slate-300 mt-1">Lebih cepat menyusun manifest, roomlist &amp; dokumen keberangkatan</p>
+                </div>
+                <div>
+                  <p class="font-heading text-2xl sm:text-3xl font-extrabold text-amber-300">0%</p>
+                  <p class="text-xs text-slate-300 mt-1">Kebocoran selisih kurs &amp; biaya komponen HPP tak tercatat</p>
+                </div>
+                <div class="border-r border-white/15 pr-4 pt-3 border-t border-white/10">
+                  <p class="font-heading text-2xl sm:text-3xl font-extrabold text-emerald-300">10x</p>
+                  <p class="text-xs text-slate-300 mt-1">Kapasitas jaringan agen &amp; affiliator tanpa tambah staf admin</p>
+                </div>
+                <div class="pt-3 border-t border-white/10">
+                  <p class="font-heading text-2xl sm:text-3xl font-extrabold text-white">100%</p>
+                  <p class="text-xs text-slate-300 mt-1">Kepemilikan lisensi platform tanpa potongan per jamaah/pax</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sisi Kanan: 4 Poin Keunggulan Strategis -->
+          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <!-- Poin 1 -->
+            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-ladoob-navy/30 transition-all">
+              <div class="w-11 h-11 rounded-xl bg-ladoob-navy text-white flex items-center justify-center mb-4">
+                <i data-lucide="shield-check" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-heading font-bold text-lg text-ladoob-navy mb-2">
+                Kebocoran HPP &amp; Margin Terkendali
+              </h3>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Kalkulasi otomatis seluruh komponen biaya perjalanan (tiket pesawat, hotel Makkah/Madinah/destinasi, visa, transport, handling) dengan konversi kurs sebelum paket dirilis ke agen.
+              </p>
+            </div>
+
+            <!-- Poin 2 -->
+            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-ladoob-agent/30 transition-all">
+              <div class="w-11 h-11 rounded-xl bg-ladoob-agent text-white flex items-center justify-center mb-4">
+                <i data-lucide="network" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-heading font-bold text-lg text-ladoob-navy mb-2">
+                Skalabilitas Jaringan Agen Tanpa Tambah Admin
+              </h3>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Ribuan agen, reseller, dan affiliator dapat membagikan katalog, menginput pendaftaran jamaah/peserta, hingga memantau status komisi secara mandiri lewat aplikasi Ladoob Agent.
+              </p>
+            </div>
+
+            <!-- Poin 3 -->
+            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-ladoob-masar/30 transition-all">
+              <div class="w-11 h-11 rounded-xl bg-ladoob-masar text-white flex items-center justify-center mb-4">
+                <i data-lucide="smartphone" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-heading font-bold text-lg text-ladoob-navy mb-2">
+                Pengalaman Jamaah &amp; Wisatawan Lebih Profesional
+              </h3>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Tidak perlu lagi mengirim file PDF itinerary, nomor kamar, atau e-ticket berulang kali di grup chat. Seluruh dokumen, panduan manasik, dan notifikasi jadwal tersaji rapi di Compass &amp; Masar.
+              </p>
+            </div>
+
+            <!-- Poin 4 -->
+            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-ladoob-compass/30 transition-all">
+              <div class="w-11 h-11 rounded-xl bg-ladoob-compass text-white flex items-center justify-center mb-4">
+                <i data-lucide="key-round" class="w-5 h-5"></i>
+              </div>
+              <h3 class="font-heading font-bold text-lg text-ladoob-navy mb-2">
+                Kepemilikan Platform (One-Time License)
+              </h3>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Investasi lisensi platform sekali bayar di awal—bukan skema sewa per kepala atau potongan per transaksi yang membengkak saat musim ramai. Cukup perpanjang biaya cloud &amp; maintenance tahunan.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 5. PRICING SECTION (4 TIER + DISCLAIMER BOX RESMI)                    -->
+    <!-- ===================================================================== -->
+    <section id="harga" class="py-16 sm:py-24 bg-ladoob-slateBg border-t border-slate-200/70" style="overflow-x: clip;">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header Harga -->
+        <div class="max-w-3xl mx-auto text-center mb-12">
+          <span class="inline-block text-xs font-bold uppercase tracking-wider text-ladoob-navy bg-ladoob-navy/[0.07] px-3 py-1 rounded-full mb-3">
+            Investasi Transparan &amp; Terukur
+          </span>
+          <h2 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-ladoob-navy tracking-tight mb-4">
+            Pilih Paket Ekosistem Sesuai Skala Travel Anda
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+            Seluruh paket menggunakan skema lisensi platform <strong>One-Time (Sekali Bayar)</strong> dengan biaya Cloud &amp; Maintenance tahunan yang ringan dan dapat diprediksi.
+          </p>
+        </div>
+
+        <!-- Grid 4 Tier Harga -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 items-stretch">
+
+          <!-- TIER 1: STARTER -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col justify-between shadow-xs hover:shadow-soft transition-all">
+            <div>
+              <div class="mb-4">
+                <h3 class="font-heading font-bold text-xl text-ladoob-navy">Starter</h3>
+                <p class="text-xs text-slate-500 mt-1">Cocok untuk travel rintisan &amp; agensi baru.</p>
+              </div>
+
+              <div class="py-4 border-y border-slate-100 mb-5">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Harga Platform (One-Time)</span>
+                <p class="font-heading text-2xl sm:text-[26px] font-extrabold text-ladoob-navy mt-0.5">Rp 14.500.000</p>
+                <div class="mt-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+                  <p class="text-xs font-semibold text-slate-700">Cloud + Maintenance Tahunan:</p>
+                  <p class="text-xs text-slate-600 mt-0.5"><strong>Rp 3.600.000 / tahun</strong> <span class="text-emerald-700 font-semibold">(Gratis tahun pertama)</span></p>
+                </div>
+              </div>
+
+              <ul class="space-y-3 text-xs sm:text-sm text-slate-600 mb-6">
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                  <span><strong>Ladoob Core Web</strong> (hingga 3 akun admin)</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                  <span>Modul manajemen paket &amp; manifest dasar</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                  <span>Laporan keuangan &amp; arus kas standar</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                  <span>Kapasitas hingga <strong>25 agen aktif</strong></span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                  <span>Dukungan teknis email &amp; WA jam kerja</span>
+                </li>
+              </ul>
+            </div>
+
+            <a
+              href="https://wa.me/6281234567890?text=Halo%20Ladoob,%20saya%20tertarik%20Coba%20Sekarang%20untuk%20paket%20Starter%20(Rp%2014.500.000%20One-Time)."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-ladoob-navy text-ladoob-navy hover:bg-ladoob-navy hover:text-white font-semibold text-sm transition-colors"
+            >
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>Coba Sekarang</span>
+            </a>
+          </div>
+
+          <!-- TIER 2: BUSINESS (PALING POPULER) -->
+          <div class="bg-white rounded-2xl border-2 border-ladoob-navy p-6 flex flex-col justify-between shadow-card relative">
+            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-ladoob-navy text-white text-[11px] font-bold uppercase tracking-wider px-4 py-1 rounded-full shadow-sm whitespace-nowrap">
+              ★ Paling Populer
+            </div>
+
+            <div>
+              <div class="mb-4 pt-1">
+                <h3 class="font-heading font-bold text-xl text-ladoob-navy">Business</h3>
+                <p class="text-xs text-slate-500 mt-1">Ideal untuk biro wisata &amp; travel Umrah berkembang.</p>
+              </div>
+
+              <div class="py-4 border-y border-slate-100 mb-5">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-ladoob-navy/70 block">Harga Platform (One-Time)</span>
+                <p class="font-heading text-2xl sm:text-[26px] font-extrabold text-ladoob-navy mt-0.5">Rp 29.000.000</p>
+                <div class="mt-2.5 p-2.5 rounded-xl bg-ladoob-navy/[0.04] border border-ladoob-navy/15">
+                  <p class="text-xs font-semibold text-ladoob-navy">Cloud + Maintenance Tahunan:</p>
+                  <p class="text-xs text-slate-700 mt-0.5"><strong>Rp 6.000.000 / tahun</strong> <span class="text-emerald-700 font-semibold">(Gratis tahun pertama)</span></p>
+                </div>
+              </div>
+
+              <ul class="space-y-3 text-xs sm:text-sm text-slate-600 mb-6">
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-ladoob-navy shrink-0 mt-0.5"></i>
+                  <span><strong>Ladoob Core Web</strong> (unlimited admin &amp; role akses)</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-ladoob-navy shrink-0 mt-0.5"></i>
+                  <span>Aplikasi Android/iOS <strong>Ladoob Compass atau Masar</strong></span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-ladoob-navy shrink-0 mt-0.5"></i>
+                  <span><strong>Ladoob Agent App</strong> untuk jaringan mitra &amp; affiliator</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-ladoob-navy shrink-0 mt-0.5"></i>
+                  <span>Kalkulator HPP &amp; multi-currency (IDR / USD / SAR)</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-ladoob-navy shrink-0 mt-0.5"></i>
+                  <span>Integrasi Payment Gateway &amp; Prioritas Support WA</span>
+                </li>
+              </ul>
+            </div>
+
+            <a
+              href="https://wa.me/6281234567890?text=Halo%20Ladoob,%20saya%20tertarik%20Coba%20Sekarang%20untuk%20paket%20Business%20(Rp%2029.000.000%20One-Time)."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-ladoob-navy hover:bg-ladoob-navyDark text-white font-semibold text-sm shadow-sm transition-colors"
+            >
+              <i data-lucide="message-circle" class="w-4 h-4 text-emerald-300"></i>
+              <span>Coba Sekarang</span>
+            </a>
+          </div>
+
+          <!-- TIER 3: ENTERPRISE -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 flex flex-col justify-between shadow-xs hover:shadow-soft transition-all">
+            <div>
+              <div class="mb-4">
+                <h3 class="font-heading font-bold text-xl text-ladoob-navy">Enterprise</h3>
+                <p class="text-xs text-slate-500 mt-1">Untuk travel multi-cabang &amp; penyelenggara Umrah/Haji skala besar.</p>
+              </div>
+
+              <div class="py-4 border-y border-slate-100 mb-5">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 block">Harga Platform (One-Time)</span>
+                <p class="font-heading text-2xl sm:text-[26px] font-extrabold text-ladoob-navy mt-0.5">Rp 55.000.000</p>
+                <div class="mt-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+                  <p class="text-xs font-semibold text-slate-700">Cloud + Maintenance Tahunan:</p>
+                  <p class="text-xs text-slate-600 mt-0.5"><strong>Rp 10.800.000 / tahun</strong> <span class="text-ladoob-navy font-medium">(Dedicated Cloud)</span></p>
+                </div>
+              </div>
+
+              <ul class="space-y-3 text-xs sm:text-sm text-slate-600 mb-6">
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                  <span><strong>Full 4 Pilar Ekosistem</strong> (Core Web + Compass + Masar + Agent App)</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                  <span>Multi-cabang &amp; multi-gudang logistik perlengkapan</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                  <span>Hierarki komisi agen bertingkat (tiering &amp; override)</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                  <span>API &amp; webhook integrasi software akuntansi</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-ladoob-agent shrink-0 mt-0.5"></i>
+                  <span>SLA uptime 99.9% &amp; Dedicated Account Manager</span>
+                </li>
+              </ul>
+            </div>
+
+            <a
+              href="https://wa.me/6281234567890?text=Halo%20Ladoob,%20saya%20tertarik%20Coba%20Sekarang%20untuk%20paket%20Enterprise%20(Rp%2055.000.000%20One-Time)."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 border-ladoob-navy text-ladoob-navy hover:bg-ladoob-navy hover:text-white font-semibold text-sm transition-colors"
+            >
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>Coba Sekarang</span>
+            </a>
+          </div>
+
+          <!-- TIER 4: CUSTOM WHITELABEL -->
+          <div class="bg-gradient-to-b from-ladoob-navy to-ladoob-navyDark text-white rounded-2xl p-6 flex flex-col justify-between shadow-soft">
+            <div>
+              <div class="mb-4">
+                <div class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-amber-300 bg-white/10 px-2.5 py-0.5 rounded-full mb-2">
+                  <i data-lucide="sparkles" class="w-3 h-3"></i>
+                  <span>Full Brand Identity</span>
+                </div>
+                <h3 class="font-heading font-bold text-xl text-white">Custom Whitelabel</h3>
+                <p class="text-xs text-slate-300 mt-1">Ekosistem penuh dengan identitas merek &amp; domain Anda sendiri.</p>
+              </div>
+
+              <div class="py-4 border-y border-white/15 mb-5">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-300 block">Harga Platform (One-Time)</span>
+                <p class="font-heading text-2xl sm:text-[26px] font-extrabold text-white mt-0.5">Mulai Rp 85.000.000</p>
+                <div class="mt-2.5 p-2.5 rounded-xl bg-white/10 border border-white/10">
+                  <p class="text-xs font-semibold text-amber-200">Cloud + Maintenance Tahunan:</p>
+                  <p class="text-xs text-slate-200 mt-0.5">Sesuai kapasitas infrastruktur server</p>
+                </div>
+              </div>
+
+              <ul class="space-y-3 text-xs sm:text-sm text-slate-200 mb-6">
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-300 shrink-0 mt-0.5"></i>
+                  <span><strong>100% Whitelabel</strong> (nama aplikasi, ikon, warna &amp; domain milik brand Anda di Play Store / App Store)</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-300 shrink-0 mt-0.5"></i>
+                  <span>Kustomisasi alur bisnis &amp; modul spesifik perusahaan</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-300 shrink-0 mt-0.5"></i>
+                  <span>Opsi deployment di cloud/server pribadi perusahaan</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check" class="w-4 h-4 text-amber-300 shrink-0 mt-0.5"></i>
+                  <span>Opsi full source-code / escrow agreement resmi</span>
+                </li>
+              </ul>
+            </div>
+
+            <a
+              href="https://wa.me/6281234567890?text=Halo%20Ladoob,%20saya%20tertarik%20Coba%20Sekarang%20untuk%20paket%20Custom%20Whitelabel."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white text-ladoob-navy hover:bg-slate-100 font-semibold text-sm transition-colors"
+            >
+              <i data-lucide="message-circle" class="w-4 h-4 text-ladoob-agent"></i>
+              <span>Coba Sekarang</span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- PROMINENT DISCLAIMER NOTICE BOX -->
+        <div class="mt-10 bg-amber-50 border-l-4 border-ladoob-masar rounded-2xl p-5 sm:p-6 shadow-xs">
+          <div class="flex items-start gap-3.5">
+            <div class="w-9 h-9 rounded-xl bg-ladoob-masar/15 text-ladoob-masar flex items-center justify-center shrink-0 mt-0.5">
+              <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+            </div>
+            <div class="space-y-1.5 text-xs sm:text-sm text-slate-700 leading-relaxed">
+              <p class="font-heading font-bold text-sm sm:text-base text-ladoob-navy">
+                Catatan Penting: Harga paket di atas khusus untuk lisensi platform &amp; ekosistem Ladoob, tidak termasuk pembuatan website company profile perusahaan travel.
+              </p>
+              <p class="text-slate-600">
+                Seluruh paket menerapkan biaya lisensi platform <strong>One-Time (sekali bayar)</strong> dan perpanjangan <strong>Cloud &amp; Maintenance tahunan</strong>. Layanan pembuatan website <em>company profile</em> perusahaan travel tersedia sebagai opsi tambahan (<em>add-on</em>) terpisah.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 6. BLOG & WAWASAN INDUSTRI TRAVEL (DENGAN MODAL BACA CEPAT)           -->
+    <!-- ===================================================================== -->
+    <section id="blog" class="py-16 sm:py-24 bg-white" style="overflow-x: clip;">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
+          <div>
+            <span class="inline-block text-xs font-bold uppercase tracking-wider text-ladoob-navy bg-ladoob-navy/[0.07] px-3 py-1 rounded-full mb-3">
+              Blog &amp; Wawasan Industri
+            </span>
+            <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-ladoob-navy tracking-tight">
+              Strategi Operasional &amp; Digitalisasi Travel Modern
+            </h2>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-500 max-w-md">
+            Panduan praktis bagi pemilik biro wisata dan penyelenggara Umrah dalam mengelola margin, agen, dan pengalaman jamaah.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Artikel 1 -->
+          <article class="group bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-soft transition-all flex flex-col justify-between">
+            <div>
+              <div class="h-44 bg-gradient-to-br from-ladoob-masar to-[#9D5B29] p-6 flex flex-col justify-between text-white relative overflow-hidden">
+                <span class="inline-block self-start text-[11px] font-bold uppercase tracking-wider bg-white/20 backdrop-blur-xs px-3 py-1 rounded-full">
+                  Manajemen Travel Umrah
+                </span>
+                <div class="flex items-center justify-between text-xs text-amber-100">
+                  <span>Estimasi baca: 4 menit</span>
+                  <i data-lucide="calculator" class="w-8 h-8 opacity-30"></i>
+                </div>
+              </div>
+              <div class="p-6">
+                <h3 class="font-heading font-bold text-lg text-ladoob-navy group-hover:text-ladoob-masar transition-colors leading-snug mb-3">
+                  Cara Menghitung HPP Paket Umrah Multi-Mata Uang (SAR, USD, IDR) Agar Margin Tidak Terkikis Kurs
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">
+                  Fluktuasi nilai tukar Riyal Saudi (SAR) dan Dolar AS (USD) sering kali menggerus keuntungan paket Umrah yang sudah terlanjur dipublikasikan ke agen. Pelajari struktur penguncian HPP berbasis komponen.
+                </p>
+              </div>
+            </div>
+            <div class="px-6 pb-6">
+              <button
+                type="button"
+                onclick="openArticleModal(0)"
+                class="inline-flex items-center gap-1.5 text-sm font-bold text-ladoob-navy group-hover:text-ladoob-masar transition-colors"
+              >
+                <span>Baca Artikel</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </article>
+
+          <!-- Artikel 2 -->
+          <article class="group bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-soft transition-all flex flex-col justify-between">
+            <div>
+              <div class="h-44 bg-gradient-to-br from-ladoob-agent to-[#173C33] p-6 flex flex-col justify-between text-white relative overflow-hidden">
+                <span class="inline-block self-start text-[11px] font-bold uppercase tracking-wider bg-white/20 backdrop-blur-xs px-3 py-1 rounded-full">
+                  Strategi Pertumbuhan Agen
+                </span>
+                <div class="flex items-center justify-between text-xs text-emerald-100">
+                  <span>Estimasi baca: 5 menit</span>
+                  <i data-lucide="share-2" class="w-8 h-8 opacity-30"></i>
+                </div>
+              </div>
+              <div class="p-6">
+                <h3 class="font-heading font-bold text-lg text-ladoob-navy group-hover:text-ladoob-agent transition-colors leading-snug mb-3">
+                  Membangun Sistem Komisi Affiliator &amp; Reseller Travel yang Transparan Tanpa Beban Admin Manual
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">
+                  Kunci memperbesar jaringan agen dan syiar Umrah adalah kepercayaan pada perhitungan komisi. Simak bagaimana link afiliasi unik dan dashboard komisi otomatis meningkatkan produktivitas mitra.
+                </p>
+              </div>
+            </div>
+            <div class="px-6 pb-6">
+              <button
+                type="button"
+                onclick="openArticleModal(1)"
+                class="inline-flex items-center gap-1.5 text-sm font-bold text-ladoob-navy group-hover:text-ladoob-agent transition-colors"
+              >
+                <span>Baca Artikel</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </article>
+
+          <!-- Artikel 3 -->
+          <article class="group bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:shadow-soft transition-all flex flex-col justify-between">
+            <div>
+              <div class="h-44 bg-gradient-to-br from-ladoob-navy to-ladoob-navyDark p-6 flex flex-col justify-between text-white relative overflow-hidden">
+                <span class="inline-block self-start text-[11px] font-bold uppercase tracking-wider bg-white/20 backdrop-blur-xs px-3 py-1 rounded-full">
+                  Digitalisasi Operasional
+                </span>
+                <div class="flex items-center justify-between text-xs text-slate-200">
+                  <span>Estimasi baca: 4 menit</span>
+                  <i data-lucide="layers" class="w-8 h-8 opacity-30"></i>
+                </div>
+              </div>
+              <div class="p-6">
+                <h3 class="font-heading font-bold text-lg text-ladoob-navy group-hover:text-ladoob-compass transition-colors leading-snug mb-3">
+                  Mengapa Travel Modern Beralih dari Spreadsheet ke Ekosistem Terintegrasi untuk Manifest &amp; Itinerary
+                </h3>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">
+                  Mengelola ratusan data paspor, pembagian kamar hotel, dan revisi jadwal penerbangan di banyak file spreadsheet sangat rawan human-error. Lihat perbandingan alur kerja terpusat.
+                </p>
+              </div>
+            </div>
+            <div class="px-6 pb-6">
+              <button
+                type="button"
+                onclick="openArticleModal(2)"
+                class="inline-flex items-center gap-1.5 text-sm font-bold text-ladoob-navy group-hover:text-ladoob-compass transition-colors"
+              >
+                <span>Baca Artikel</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 7. FAQ SECTION (INTERACTIVE ACCORDION — 6 PERTANYAAN UTAMA)           -->
+    <!-- ===================================================================== -->
+    <section id="faq" class="py-16 sm:py-24 bg-ladoob-slateBg border-t border-slate-200/70" style="overflow-x: clip;">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <span class="inline-block text-xs font-bold uppercase tracking-wider text-ladoob-navy bg-ladoob-navy/[0.07] px-3 py-1 rounded-full mb-3">
+            Pertanyaan yang Sering Diajukan
+          </span>
+          <h2 class="font-heading text-2xl sm:text-3xl font-extrabold text-ladoob-navy tracking-tight mb-3">
+            Informasi Teknis &amp; Skema Kerja Sama Ladoob
+          </h2>
+          <p class="text-slate-600 text-sm sm:text-base">
+            Jawaban ringkas untuk membantu Anda mengambil keputusan terbaik bagi operasional travel Anda.
+          </p>
+        </div>
+
+        <div class="space-y-3.5" id="faqAccordion">
+          <!-- FAQ 1 -->
+          <div class="faq-item active bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <button type="button" class="faq-trigger w-full px-5 sm:px-6 py-4.5 text-left flex items-center justify-between gap-4 focus:outline-none">
+              <span class="font-heading font-bold text-sm sm:text-base text-ladoob-navy">
+                1. Apa maksud skema pembayaran One-Time untuk platform dan biaya Cloud + Maintenance tahunan?
+              </span>
+              <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200"></i>
+            </button>
+            <div class="faq-content px-5 sm:px-6">
+              <p class="pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3.5">
+                Anda hanya membayar biaya lisensi software <strong>satu kali di awal (One-Time)</strong> tanpa biaya sewa bulanan per pengguna ataupun potongan per jamaah/peserta. Mulai tahun kedua, Anda cukup membayar biaya <strong>Cloud Infrastructure &amp; Maintenance tahunan</strong> untuk menjaga server tetap online 24/7, backup database harian, sertifikat SSL, serta pembaruan keamanan dan pemeliharaan sistem.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="faq-item bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <button type="button" class="faq-trigger w-full px-5 sm:px-6 py-4.5 text-left flex items-center justify-between gap-4 focus:outline-none">
+              <span class="font-heading font-bold text-sm sm:text-base text-ladoob-navy">
+                2. Apakah harga paket sudah termasuk website company profile perusahaan travel kami?
+              </span>
+              <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200"></i>
+            </button>
+            <div class="faq-content px-5 sm:px-6">
+              <p class="pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3.5">
+                <strong>Belum termasuk.</strong> Seluruh paket harga Ladoob difokuskan pada ekosistem sistem manajemen operasional (<em>Ladoob Core Web</em>) serta aplikasi mobile pelanggan &amp; mitra (<em>Compass, Masar, Agent</em>). Apabila perusahaan Anda belum memiliki website profil atau ingin mengintegrasikan katalog website dengan Ladoob Core, layanan pembuatan website <em>company profile</em> tersedia sebagai <strong>add-on terpisah</strong>.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="faq-item bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <button type="button" class="faq-trigger w-full px-5 sm:px-6 py-4.5 text-left flex items-center justify-between gap-4 focus:outline-none">
+              <span class="font-heading font-bold text-sm sm:text-base text-ladoob-navy">
+                3. Apakah Ladoob bisa digunakan untuk travel wisata umum saja, atau khusus Umrah &amp; Haji?
+              </span>
+              <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200"></i>
+            </button>
+            <div class="faq-content px-5 sm:px-6">
+              <p class="pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3.5">
+                <strong>Bisa keduanya maupun salah satu.</strong> Ekosistem Ladoob dirancang modular: Anda dapat menjalankan lini wisata domestik &amp; internasional melalui aplikasi <strong>Ladoob Compass</strong>, serta menjalankan lini perjalanan ibadah Umrah &amp; Haji khusus melalui aplikasi <strong>Ladoob Masar (مسار)</strong>—keduanya dikelola terpusat dari satu dashboard <strong>Ladoob Core</strong>.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ 4 -->
+          <div class="faq-item bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <button type="button" class="faq-trigger w-full px-5 sm:px-6 py-4.5 text-left flex items-center justify-between gap-4 focus:outline-none">
+              <span class="font-heading font-bold text-sm sm:text-base text-ladoob-navy">
+                4. Bagaimana proses migrasi data jamaah, paket, dan agen yang sudah ada sebelumnya?
+              </span>
+              <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200"></i>
+            </button>
+            <div class="faq-content px-5 sm:px-6">
+              <p class="pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3.5">
+                Ladoob menyediakan fitur <strong>Bulk Import (Excel/CSV)</strong> dengan template standar yang mudah diisi. Tim <em>onboarding</em> kami juga akan mendampingi proses pembersihan dan impor data master pelanggan/jamaah, daftar agen aktif, serta paket keberangkatan yang sedang berjalan agar transisi berjalan mulus.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ 5 -->
+          <div class="faq-item bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <button type="button" class="faq-trigger w-full px-5 sm:px-6 py-4.5 text-left flex items-center justify-between gap-4 focus:outline-none">
+              <span class="font-heading font-bold text-sm sm:text-base text-ladoob-navy">
+                5. Berapa lama waktu implementasi hingga sistem siap digunakan operasional?
+              </span>
+              <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200"></i>
+            </button>
+            <div class="faq-content px-5 sm:px-6">
+              <p class="pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3.5">
+                Untuk paket <strong>Starter</strong> dan <strong>Business</strong>, setup infrastruktur cloud, konfigurasi awal, dan pelatihan tim admin memakan waktu <strong>3–7 hari kerja</strong>. Untuk paket <strong>Enterprise</strong> dan <strong>Custom Whitelabel</strong> (termasuk proses publikasi akun developer Google Play Store &amp; Apple App Store), estimasi implementasi berkisar antara <strong>2–5 minggu</strong> sesuai ruang lingkup kustomisasi.
+              </p>
+            </div>
+          </div>
+
+          <!-- FAQ 6 -->
+          <div class="faq-item bg-white rounded-2xl border border-slate-200 overflow-hidden">
+            <button type="button" class="faq-trigger w-full px-5 sm:px-6 py-4.5 text-left flex items-center justify-between gap-4 focus:outline-none">
+              <span class="font-heading font-bold text-sm sm:text-base text-ladoob-navy">
+                6. Apakah data keuangan dan database jamaah milik travel kami terjamin keamanannya?
+              </span>
+              <i data-lucide="chevron-down" class="faq-chevron w-5 h-5 text-slate-400 shrink-0 transition-transform duration-200"></i>
+            </button>
+            <div class="faq-content px-5 sm:px-6">
+              <p class="pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3.5">
+                <strong>Sangat terjamin.</strong> Setiap klien mendapatkan isolasi database terpisah dengan enkripsi SSL/TLS end-to-end, kontrol hak akses berbasis peran (<em>Role-Based Access Control</em>), log aktivitas pengguna (<em>audit trail</em>), serta pencadangan data otomatis harian. Data Anda sepenuhnya milik perusahaan Anda dan tidak pernah dibagikan ke pihak mana pun.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- 8. BOTTOM CTA BANNER                                                  -->
+    <!-- ===================================================================== -->
+    <section class="py-16 sm:py-20 bg-white" style="overflow-x: clip;">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-r from-ladoob-navy via-ladoob-navyLight to-ladoob-navy rounded-3xl p-8 sm:p-12 lg:p-14 text-white relative overflow-hidden shadow-card">
+          <div class="pointer-events-none absolute -right-16 -bottom-16 w-72 h-72 rounded-full border-[28px] border-white/5"></div>
+          <div class="pointer-events-none absolute right-24 -top-20 w-48 h-48 rounded-full bg-ladoob-masar/20 blur-2xl"></div>
+
+          <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+            <div class="max-w-2xl">
+              <span class="inline-block text-xs font-bold uppercase tracking-wider text-amber-300 bg-white/10 px-3 py-1 rounded-full mb-4">
+                Jadwalkan Live Demo Gratis
+              </span>
+              <h2 class="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-tight mb-3">
+                Siap Membawa Operasional Travel Anda ke Level Berikutnya?
+              </h2>
+              <p class="text-slate-200 text-sm sm:text-base leading-relaxed">
+                Diskusikan kebutuhan spesifik biro wisata atau travel Umrah Anda bersama tim konsultan Ladoob dan lihat langsung simulasi <strong>Ladoob Core, Compass, Masar, dan Agent App</strong>.
+              </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row lg:flex-col gap-3 w-full sm:w-auto shrink-0">
+              <a
+                href="https://wa.me/6281234567890?text=Halo%20tim%20Ladoob,%20saya%20ingin%20coba%20sekarang%20dan%20melihat%20demo%20lengkap%20ekosistem%20Ladoob."
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center gap-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-7 py-4 rounded-xl shadow-lg transition-all text-sm sm:text-base"
+              >
+                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                <span>Coba Sekarang</span>
+              </a>
+              <span class="text-center text-xs text-slate-300">Terhubung langsung ke WhatsApp Tim Ladoob</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- FOOTER                                                                -->
+  <!-- ===================================================================== -->
+  <footer class="bg-ladoob-navyDark text-slate-300 pt-14 pb-24 sm:pb-14 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/10">
+        
+        <!-- Brand & Tagline -->
+        <div class="lg:col-span-5">
+          <a href="#hero" class="inline-flex items-center gap-3 mb-4">
+            <svg class="w-10 h-11 shrink-0" viewBox="0 0 88 98" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M40.5 2.2C42.66 0.95 45.34 0.95 47.5 2.2L81.5 21.83C83.66 23.08 85 25.39 85 27.89V67.11C85 69.61 83.66 71.92 81.5 73.17L47.5 92.8C45.34 94.05 42.66 94.05 40.5 92.8L6.5 73.17C4.34 71.92 3 69.61 3 67.11V27.89C3 25.39 4.34 23.08 6.5 21.83L40.5 2.2Z" fill="#234B73"/>
+              <circle cx="44" cy="47.5" r="23.5" stroke="white" stroke-width="2.1"/>
+              <circle cx="44" cy="47.5" r="19" stroke="white" stroke-width="1" stroke-opacity="0.55"/>
+              <line x1="44" y1="24" x2="44" y2="28.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="44" y1="66.5" x2="44" y2="71" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="20.5" y1="47.5" x2="25" y2="47.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+              <line x1="63" y1="47.5" x2="67.5" y2="47.5" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M27 59.5C32.5 63.5 41 61 45 53" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <path d="M57.8 33.7C58.6 34.5 58.3 36.1 57.1 37.3L51.8 42.6L54.9 54.4L52.3 57L47.5 46.9L42.3 52.1L43.2 56.5L41.2 58.5L38.4 53.6L33.5 50.8L35.5 48.8L39.9 49.7L45.1 44.5L35 39.7L37.6 37.1L49.4 40.2L54.7 34.9C55.9 33.7 57 32.9 57.8 33.7Z" fill="white"/>
+            </svg>
+            <div class="flex flex-col leading-none">
+              <div class="flex items-start">
+                <span class="font-heading font-extrabold text-2xl tracking-tight text-white">Ladoob</span>
+                <span class="text-[10px] font-bold text-slate-300 ml-0.5 mt-0.5">®</span>
+              </div>
+              <span class="text-[11px] font-medium tracking-[0.06em] text-slate-400 mt-1">Beyond Smart Travel</span>
+            </div>
+          </a>
+          <p class="text-sm text-slate-400 leading-relaxed max-w-md mb-5">
+            Platform manajemen operasional dan ekosistem aplikasi mobile terpadu untuk biro perjalanan wisata umum dan penyelenggara ibadah Umrah &amp; Haji.
+          </p>
+          <p class="text-xs text-slate-400">
+            Website resmi: <span class="text-white font-semibold">ladoob.com</span>
+          </p>
+        </div>
+
+        <!-- Pilar Ekosistem -->
+        <div class="lg:col-span-3">
+          <h4 class="font-heading font-bold text-sm uppercase tracking-wider text-white mb-4">4 Pilar Ekosistem</h4>
+          <ul class="space-y-2.5 text-sm text-slate-400">
+            <li><a href="#fitur" onclick="selectPillar('core')" class="hover:text-white transition-colors">Ladoob Core (Web Dashboard)</a></li>
+            <li><a href="#fitur" onclick="selectPillar('compass')" class="hover:text-white transition-colors">Ladoob Compass (Wisata Umum)</a></li>
+            <li><a href="#fitur" onclick="selectPillar('masar')" class="hover:text-white transition-colors">Ladoob Masar مسار (Umrah &amp; Haji)</a></li>
+            <li><a href="#fitur" onclick="selectPillar('agent')" class="hover:text-white transition-colors">Ladoob Agent (Mitra &amp; Affiliator)</a></li>
+          </ul>
+        </div>
+
+        <!-- Tautan Cepat & Kontak -->
+        <div class="lg:col-span-4">
+          <h4 class="font-heading font-bold text-sm uppercase tracking-wider text-white mb-4">Tautan &amp; Kontak</h4>
+          <ul class="space-y-2.5 text-sm text-slate-400 mb-5">
+            <li><a href="#manfaat" class="hover:text-white transition-colors">Manfaat Bisnis &amp; ROI</a></li>
+            <li><a href="#harga" class="hover:text-white transition-colors">Paket Harga &amp; Lisensi</a></li>
+            <li><a href="#blog" class="hover:text-white transition-colors">Blog &amp; Wawasan Industri</a></li>
+            <li><a href="#faq" class="hover:text-white transition-colors">FAQ (Pertanyaan Umum)</a></li>
+          </ul>
+          <div class="space-y-2 text-xs text-slate-300">
+            <p class="flex items-center gap-2">
+              <i data-lucide="mail" class="w-4 h-4 text-amber-300"></i>
+              <span>halo@ladoob.com</span>
+            </p>
+            <p class="flex items-center gap-2">
+              <i data-lucide="phone" class="w-4 h-4 text-emerald-400"></i>
+              <span>+62 812-3456-7890 (WhatsApp Business)</span>
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <p>&copy; 2026 Ladoob (ladoob.com). Hak Cipta Dilindungi Undang-Undang.</p>
+        <p>Beyond Smart Travel — Travel Management Ecosystem</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- FLOATING WHATSAPP BUTTON ("Coba Sekarang")                            -->
+  <!-- ===================================================================== -->
+  <a
+    href="https://wa.me/6281234567890?text=Halo%20tim%20Ladoob,%20saya%20ingin%20coba%20sekarang%20platform%20manajemen%20travel%20Ladoob."
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Coba Sekarang via WhatsApp"
+    class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 inline-flex items-center gap-2.5 bg-ladoob-agent hover:bg-[#164237] text-white font-semibold px-4 py-3 sm:px-5 sm:py-3.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-white/15"
+  >
+    <i data-lucide="message-circle" class="w-5 h-5 text-emerald-300"></i>
+    <span class="text-xs sm:text-sm">Coba Sekarang</span>
+  </a>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL PREVIEW ARTIKEL BLOG                                            -->
+  <!-- ===================================================================== -->
+  <div id="articleModal" class="fixed inset-0 z-[10000] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs" role="dialog" aria-modal="true" aria-labelledby="modalArticleTitle">
+    <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl border border-slate-200 p-6 sm:p-8 relative">
+      <button
+        type="button"
+        onclick="closeArticleModal()"
+        aria-label="Tutup artikel"
+        class="absolute top-4 right-4 p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+      >
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <span id="modalArticleCategory" class="inline-block text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-ladoob-navy/10 text-ladoob-navy mb-3"></span>
+      <h3 id="modalArticleTitle" class="font-heading font-extrabold text-xl sm:text-2xl text-ladoob-navy leading-snug mb-4 pr-8"></h3>
+      <div id="modalArticleBody" class="space-y-4 text-sm text-slate-600 leading-relaxed"></div>
+
+      <div class="mt-6 pt-5 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <span class="text-xs text-slate-500">Ingin menerapkan sistem ini di travel Anda?</span>
+        <a
+          href="https://wa.me/6281234567890?text=Halo%20Ladoob,%20saya%20baru%20membaca%20artikel%20di%20website%20dan%20ingin%20coba%20sistem%20travel%20Ladoob."
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 bg-ladoob-navy hover:bg-ladoob-navyDark text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors"
+        >
+          <i data-lucide="message-circle" class="w-4 h-4 text-emerald-300"></i>
+          <span>Coba Sekarang</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- VANILLA JAVASCRIPT UNTUK SELURUH KOMPONEN INTERAKTIF                  -->
+  <!-- ===================================================================== -->
+  <script>
+    // Inisialisasi ikon Lucide
+    lucide.createIcons();
+
+    // -----------------------------------------------------------------------
+    // 1. Mobile Hamburger Menu Toggle
+    // -----------------------------------------------------------------------
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenuDrawer = document.getElementById('mobileMenuDrawer');
+    const menuIconOpen = document.getElementById('menuIconOpen');
+    const menuIconClose = document.getElementById('menuIconClose');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      const isHidden = mobileMenuDrawer.classList.contains('hidden');
+      if (isHidden) {
+        mobileMenuDrawer.classList.remove('hidden');
+        menuIconOpen.classList.add('hidden');
+        menuIconClose.classList.remove('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', 'true');
+      } else {
+        mobileMenuDrawer.classList.add('hidden');
+        menuIconOpen.classList.remove('hidden');
+        menuIconClose.classList.add('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenuDrawer.classList.add('hidden');
+        menuIconOpen.classList.remove('hidden');
+        menuIconClose.classList.add('hidden');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // -----------------------------------------------------------------------
+    // 2. Interaksi Salin Link Referral pada Kartu Hero Ladoob Agent
+    // -----------------------------------------------------------------------
+    function copyHeroReferral() {
+      const textToCopy = document.getElementById('heroReferralText').textContent;
+      const tempInput = document.createElement('input');
+      tempInput.value = textToCopy;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+
+      const labelEl = document.getElementById('copyReferralLabel');
+      labelEl.textContent = 'Tersalin!';
+      setTimeout(() => {
+        labelEl.textContent = 'Salin Link';
+      }, 1800);
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. Interactive Pillar Tabs (4 Pilar Ekosistem Ladoob)
+    // -----------------------------------------------------------------------
+    const pillarData = {
+      core: {
+        badge: 'Pilar 1 • Web Dashboard Pusat',
+        title: 'Ladoob Core — Pusat Kendali Owner & Tim Operasional',
+        subtitle: 'Satu layar komando untuk mengontrol seluruh produk wisata & Umrah, biaya vendor, arus kas, dan kinerja cabang maupun agen.',
+        accentBg: 'bg-ladoob-navy',
+        accentLight: 'bg-ladoob-navy/[0.06]',
+        accentText: 'text-ladoob-navy',
+        features: [
+          'Kalkulator HPP & Harga Jual Multi-Mata Uang (IDR, USD, SAR) dengan kunci margin otomatis',
+          'Manajemen Manifest, Roomlist Hotel, Pembagian Bus & Status Dokumen Paspor/Visa',
+          'Akuntansi & Arus Kas Terintegrasi (Piutang Jamaah, Hutang Vendor, Laba Rugi per Keberangkatan)',
+          'Kontrol Stok Seat & Inventaris Perlengkapan Koper/Ihram Real-Time'
+        ],
+        highlightTitle: 'Kontrol Penuh Sebelum Keberangkatan',
+        highlightDesc: 'Setiap perubahan jadwal penerbangan atau nomor kamar hotel di Ladoob Core langsung tersinkronisasi otomatis ke aplikasi Compass, Masar, dan Agent tanpa input ulang.'
+      },
+      compass: {
+        badge: 'Pilar 2 • Mobile App Wisatawan Umum',
+        title: 'Ladoob Compass — Pendamping Perjalanan Wisata Modern',
+        subtitle: 'Dirancang khusus untuk segmen Open Trip, Private Tour, MICE, dan Corporate Incentive dengan tampilan bersih dan interaktif.',
+        accentBg: 'bg-ladoob-compass',
+        accentLight: 'bg-ladoob-compassLight',
+        accentText: 'text-ladoob-compass',
+        features: [
+          'Itinerary Digital Harian Lengkap dengan Peta Lokasi, Titik Kumpul & Kontak Tour Leader',
+          'Dompet Dokumen Perjalanan (E-Ticket Pesawat, Voucher Hotel, Asuransi & Visa)',
+          'Pemesanan Paket Mandiri & Pelacakan Jadwal Pembayaran Cicilan Transparan',
+          'Notifikasi Live Trip Update & Pengumuman Rombongan Secara Real-Time'
+        ],
+        highlightTitle: 'Bebas Repot File PDF Tercecer',
+        highlightDesc: 'Wisatawan cukup membuka satu aplikasi beridentitas travel Anda untuk mengakses seluruh jadwal tur dan tiket perjalanan bahkan saat koneksi terbatas.'
+      },
+      masar: {
+        badge: 'Pilar 3 • Mobile App Jamaah Umrah & Haji',
+        title: 'Ladoob Masar (مسار) — Pendamping Ibadah & Perjalanan Tanah Suci',
+        subtitle: 'Menghadirkan ketenangan bagi jamaah dan keluarga di tanah air melalui panduan ibadah serta informasi logistik yang terstruktur.',
+        accentBg: 'bg-ladoob-masar',
+        accentLight: 'bg-ladoob-masarLight',
+        accentText: 'text-ladoob-masar',
+        features: [
+          'Panduan Manasik Digital, Niat & Doa Thawaf/Sa’i Interaktif Beserta Audio Pendamping',
+          'Informasi Nomor Kamar Hotel Makkah-Madinah, Nomor Kursi Bus & Kontak Muthawwif',
+          'Pelacakan Status Koper Bagasi, Checklist Perlengkapan & Jadwal Keberangkatan',
+          'Notifikasi Waktu Shalat Lokal & Pengingat Agenda Ziarah / Raudhah'
+        ],
+        highlightTitle: 'Khusyuk Beribadah, Tenang Secara Logistik',
+        highlightDesc: 'Membantu pembimbing ibadah (Muthawwif) dan tim operasional mengurangi ratusan pertanyaan berulang terkait lokasi titik kumpul dan pembagian kamar.'
+      },
+      agent: {
+        badge: 'Pilar 4 • Portal & App Mitra Penjualan',
+        title: 'Ladoob Agent — Akselerator Jaringan Agen, Reseller & Affiliator',
+        subtitle: 'Ubah jaringan mitra dan alumni jamaah menjadi mesin penjualan yang terukur dengan transparansi komisi otomatis.',
+        accentBg: 'bg-ladoob-agent',
+        accentLight: 'bg-ladoob-agentLight',
+        accentText: 'text-ladoob-agent',
+        features: [
+          'Katalog Paket & Materi Promosi Siap Sebar Lengkap dengan Link Afiliasi Unik',
+          'Input Pendaftaran Jamaah/Peserta & Upload Dokumen KTP/Paspor Langsung dari Ponsel',
+          'Dashboard Pelacakan Status Pembayaran Prospek & Estimasi Komisi Real-Time',
+          'Sistem Tiering Agen & Pengajuan Pencairan Komisi yang Rapi dan Terdokumentasi'
+        ],
+        highlightTitle: 'Perluas Jangkauan Tanpa Beban Admin',
+        highlightDesc: 'Mitra dapat memantau sisa seat dan status pelunasan jamaahnya sendiri kapan saja tanpa harus terus bertanya ke admin kantor pusat.'
+      }
+    };
+
+    function renderPillarDetail(key) {
+      const item = pillarData[key];
+      const container = document.getElementById('pillarDetailContainer');
+      container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-7">
+            <span class="inline-block text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full ${item.accentLight} ${item.accentText} mb-3">
+              ${item.badge}
+            </span>
+            <h3 class="font-heading text-xl sm:text-2xl font-extrabold text-ladoob-navy mb-2.5">
+              ${item.title}
+            </h3>
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed mb-6">
+              ${item.subtitle}
+            </p>
+            <ul class="space-y-3">
+              ${item.features.map(feat => `
+                <li class="flex items-start gap-3 text-xs sm:text-sm text-slate-700">
+                  <span class="w-5 h-5 rounded-full ${item.accentBg} text-white flex items-center justify-center shrink-0 mt-0.5 text-[11px] font-bold">✓</span>
+                  <span>${feat}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+          <div class="lg:col-span-5">
+            <div class="${item.accentBg} text-white rounded-2xl p-6 sm:p-7 shadow-md">
+              <p class="text-xs uppercase tracking-wider text-white/75 font-semibold mb-2">Keunggulan Utama</p>
+              <h4 class="font-heading font-bold text-lg sm:text-xl mb-3">${item.highlightTitle}</h4>
+              <p class="text-xs sm:text-sm text-white/90 leading-relaxed mb-6">${item.highlightDesc}</p>
+              <a
+                href="https://wa.me/6281234567890?text=Halo%20Ladoob,%20saya%20ingin%20Coba%20Sekarang%20modul%20${encodeURIComponent(item.title)}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 bg-white text-ladoob-navy hover:bg-slate-100 font-semibold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition-colors"
+              >
+                <span>Coba Sekarang</span>
+                <span>→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectPillar(key) {
+      document.querySelectorAll('.pillar-tab').forEach(tab => {
+        const tabKey = tab.getAttribute('data-pillar');
+        if (tabKey === key) {
+          tab.classList.add('active', 'bg-ladoob-navy', 'text-white', 'shadow-sm');
+          tab.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+        } else {
+          tab.classList.remove('active', 'bg-ladoob-navy', 'text-white', 'shadow-sm');
+          tab.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+        }
+      });
+      renderPillarDetail(key);
+    }
+
+    document.querySelectorAll('.pillar-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        selectPillar(tab.getAttribute('data-pillar'));
+      });
+    });
+
+    // Render tab default (Core)
+    renderPillarDetail('core');
+
+    // -----------------------------------------------------------------------
+    // 4. Interactive Accordion FAQ
+    // -----------------------------------------------------------------------
+    document.querySelectorAll('.faq-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const parentItem = trigger.closest('.faq-item');
+        const isAlreadyActive = parentItem.classList.contains('active');
+
+        document.querySelectorAll('.faq-item').forEach(item => {
+          item.classList.remove('active');
+        });
+
+        if (!isAlreadyActive) {
+          parentItem.classList.add('active');
+        }
+      });
+    });
+
+    // -----------------------------------------------------------------------
+    // 5. Modal Baca Cepat Artikel Blog
+    // -----------------------------------------------------------------------
+    const blogArticles = [
+      {
+        category: 'Manajemen Travel Umrah',
+        title: 'Cara Menghitung HPP Paket Umrah Multi-Mata Uang (SAR, USD, IDR) Agar Margin Tidak Terkikis Kurs',
+        paragraphs: [
+          'Salah satu tantangan terbesar penyelenggara perjalanan Umrah adalah struktur biaya yang terbagi ke dalam tiga mata uang sekaligus: komponen Land Arrangement (hotel Makkah-Madinah, transportasi darat, muthawwif, konsumsi) dalam Riyal Saudi (SAR), tiket penerbangan internasional & visa dalam Dolar AS (USD), serta perlengkapan dan operasional lokal dalam Rupiah (IDR).',
+          'Ketika harga paket sudah dirilis ke ratusan agen beberapa bulan sebelum keberangkatan tanpa penguncian kurs penyangga (buffer rate), kenaikan kurs sebesar Rp 150–Rp 300 per SAR saja dapat memangkas margin bersih secara signifikan.',
+          'Melalui modul kalkulator HPP di Ladoob Core, setiap komponen biaya dicatat dalam mata uang aslinya beserta kurs acuan dan margin pengaman. Saat terjadi pelunasan ke vendor, sistem langsung membandingkan estimasi HPP awal dengan realisasi aktual sehingga owner memiliki visibilitas penuh atas profitabilitas setiap kloter.'
+        ]
+      },
+      {
+        category: 'Strategi Pertumbuhan Agen',
+        title: 'Membangun Sistem Komisi Affiliator & Reseller Travel yang Transparan Tanpa Beban Admin Manual',
+        paragraphs: [
+          'Pertumbuhan banyak biro travel modern bertumpu pada kekuatan jaringan syiar, ketua rombongan, reseller, hingga affiliator digital. Namun, masalah klasik muncul ketika jumlah mitra melewati puluhan orang: rekapitulasi komisi di spreadsheet mulai tertukar dan mitra terus menanyakan status pembayaran jamaah mereka.',
+          'Dengan membekali mitra menggunakan aplikasi Ladoob Agent, setiap mitra memiliki katalog paket dengan tautan afiliasi unik dan formulir pendaftaran langsung yang terhubung ke Ladoob Core.',
+          'Begitu jamaah melakukan pembayaran DP atau pelunasan yang terverifikasi sistem, status komisi mitra otomatis berubah secara transparan. Tim keuangan pusat cukup meninjau rekap pencairan komisi secara berkala tanpa perlu menghitung manual satu per satu.'
+        ]
+      },
+      {
+        category: 'Digitalisasi Operasional',
+        title: 'Mengapa Travel Modern Beralih dari Spreadsheet ke Ekosistem Terintegrasi untuk Manifest & Itinerary',
+        paragraphs: [
+          'Spreadsheet memang fleksibel di awal berdiri, tetapi saat menangani beberapa keberangkatan wisata dan Umrah secara bersamaan, menyalin data paspor dari grup chat ke file manifest, lalu menyusun ulang untuk roomlist hotel dan e-ticket sangat rentan terhadap salah ketik.',
+          'Lebih jauh lagi, perubahan jadwal penerbangan atau nomor kamar sering kali memaksa admin mengirimkan file PDF revisi berulang kali yang membingungkan peserta.',
+          'Dalam ekosistem Ladoob, data jamaah/wisatawan cukup diinput satu kali. Manifest keberangkatan, pembagian kamar, hingga pembaruan itinerary langsung terkirim ke aplikasi Ladoob Compass atau Ladoob Masar di ponsel masing-masing peserta secara real-time.'
+        ]
+      }
+    ];
+
+    const articleModal = document.getElementById('articleModal');
+
+    function openArticleModal(index) {
+      const article = blogArticles[index];
+      document.getElementById('modalArticleCategory').textContent = article.category;
+      document.getElementById('modalArticleTitle').textContent = article.title;
+      document.getElementById('modalArticleBody').innerHTML = article.paragraphs
+        .map(p => `<p>${p}</p>`)
+        .join('');
+
+      articleModal.classList.remove('hidden');
+      articleModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeArticleModal() {
+      articleModal.classList.add('hidden');
+      articleModal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    articleModal.addEventListener('click', (e) => {
+      if (e.target === articleModal) {
+        closeArticleModal();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !articleModal.classList.contains('hidden')) {
+        closeArticleModal();
+      }
+    });
+  </script>
+</body>
+</html>

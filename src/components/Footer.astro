@@ -1,0 +1,83 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { useTranslations, localizePath } from '../i18n/utils';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  home?: boolean;
+  deskripsi: string;
+  websiteResmi: string;
+  pilar: { key: string; label: string }[];
+  tautan: { label: string; anchor: string }[];
+  email: string;
+  /** Format internasional tanpa +, mis. 6281234567890. Kosong = baris disembunyikan. */
+  whatsapp: string;
+  copyright: string;
+  taglineFooter: string;
+}
+const { lang, home = false, deskripsi, websiteResmi, pilar, tautan, email, whatsapp, copyright, taglineFooter } = Astro.props;
+const t = useTranslations(lang);
+const to = (anchor: string) => (home ? `#${anchor}` : localizePath(lang, `#${anchor}`));
+const wa = whatsapp.replace(/\D/g, '');
+const waTampil = wa && `+${wa.slice(0, 2)} ${wa.slice(2, 5)}-${wa.slice(5, 9)}-${wa.slice(9)}`;
+---
+
+<footer class="bg-ladoob-navyDark text-slate-300 pt-14 pb-24 sm:pb-14 border-t border-white/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/10">
+      <div class="lg:col-span-5">
+        <a href={to('hero')} class="inline-flex items-center gap-3 mb-4" aria-label={t('nav.home')}>
+          <Logo varian="gelap" class="w-10 h-11 shrink-0" />
+          <div class="flex flex-col leading-none">
+            <div class="flex items-start">
+              <span class="font-heading font-extrabold text-2xl tracking-tight text-white">Ladoob</span>
+              <span class="text-[10px] font-bold text-slate-300 ml-0.5 mt-0.5">®</span>
+            </div>
+            <span class="text-[11px] font-medium tracking-[0.06em] text-slate-400 mt-1">Beyond Smart Travel</span>
+          </div>
+        </a>
+        <p class="text-sm text-slate-400 leading-relaxed max-w-md mb-5">{deskripsi}</p>
+        <p class="text-xs text-slate-400">
+          Website resmi: <span class="text-white font-semibold">{websiteResmi}</span>
+        </p>
+      </div>
+
+      <div class="lg:col-span-3">
+        <h4 class="font-heading font-bold text-sm text-white mb-4">{t('footer.pilar')}</h4>
+        <ul class="space-y-2.5 text-sm text-slate-400">
+          {pilar.map((p) => <li><a href={to('fitur')} data-select-pillar={p.key} class="inline-block py-[5px] -my-[5px] hover:text-white transition-colors">{p.label}</a></li>)}
+        </ul>
+      </div>
+
+      <div class="lg:col-span-4">
+        <h4 class="font-heading font-bold text-sm text-white mb-4">{t('footer.links')}</h4>
+        <ul class="space-y-2.5 text-sm text-slate-400 mb-5">
+          {tautan.map((l) => <li><a href={to(l.anchor)} class="inline-block py-[5px] -my-[5px] hover:text-white transition-colors">{l.label}</a></li>)}
+        </ul>
+        {(email || wa) && (
+          <div class="space-y-2 text-xs text-slate-300">
+            {email && (
+              <p class="flex items-center gap-2">
+                <Icon name="mail" class="w-4 h-4 text-amber-300" />
+                <a href={`mailto:${email}`} class="hover:text-white">{email}</a>
+              </p>
+            )}
+            {wa && (
+              <p class="flex items-center gap-2">
+                <Icon name="phone" class="w-4 h-4 text-emerald-400" />
+                <a href={`https://wa.me/${wa}`} target="_blank" rel="noopener noreferrer" class="hover:text-white">{waTampil} {t('footer.whatsapp')}</a>
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+
+    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+      <p>{copyright}</p>
+      <p>{taglineFooter}</p>
+    </div>
+  </div>
+</footer>

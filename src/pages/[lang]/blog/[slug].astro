@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Icon from '../../../components/Icon.astro';
+import { getCollection } from 'astro:content';
+import { useTranslations, localizePath } from '../../../i18n/utils';
+import type { Lang } from '../../../i18n/ui';
+import { getPage, getSettings, blogAlternates, keyOf } from '../../../lib/content';
+import { A } from '../../../lib/aksen';
+import { bodyHtml, withBase } from '../../../lib/url';
+import { waLink } from '../../../lib/wa';
+
+export async function getStaticPaths() {
+  const all = await getCollection('blog', (e) => !e.data.draft);
+  return all.map((entry) => ({ params: { lang: entry.id.split('/')[0], slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const page = await getPage(lang, 'home');
+const settings = await getSettings(lang);
+const a = entry.data;
+const alternates = await blogAlternates(keyOf(entry));
+const jsonLd = [{
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: a.judul,
+  description: a.ringkasan,
+  datePublished: a.tanggal.toISOString().slice(0, 10),
+  inLanguage: lang,
+  author: { '@type': 'Organization', name: 'Ladoob' },
+  publisher: { '@type': 'Organization', name: 'Ladoob' },
+  ...(a.gambar ? { image: new URL(withBase(a.gambar), Astro.site).href } : {}),
+}];
+const tanggal = a.tanggal.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<BaseLayout lang={lang} title={a.judul} description={a.ringkasan} alternates={alternates} type="article" image={a.gambar} jsonLd={jsonLd}>
+  <article class="py-12 sm:py-20 bg-white" style="overflow-x: clip;">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <a href={localizePath(lang, 'blog/')} class="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-ladoob-navy py-3 -my-3 mb-6">
+        <Icon name="arrow-left" class="w-4 h-4" />
+        <span>{t('blog.all')}</span>
+      </a>
+
+      <p class={`text-sm font-semibold ${A[a.aksen].text} mb-3`}>{a.kategori}</p>
+      <h1 class="font-heading font-extrabold text-2xl sm:text-4xl text-ladoob-navy leading-snug sm:leading-tight tracking-tight mb-4">{a.judul}</h1>
+      <p class="text-sm text-slate-500 mb-8">
+        <time datetime={a.tanggal.toISOString().slice(0, 10)}>{tanggal}</time>
+        <span aria-hidden="true"> · </span>
+        {t('blog.estimate').replace('{n}', String(a.estimasiBaca))}
+      </p>
+
+      {a.gambar && <img src={withBase(a.gambar)} alt="" width="1600" height="900" class="w-full rounded-2xl border border-slate-200/90 mb-8" />}
+
+      <div class="artikel" set:html={bodyHtml(entry)} />
+
+      <div class="mt-12 p-6 sm:p-7 rounded-xl bg-ladoob-slateBg border border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <p class="font-heading font-bold text-ladoob-navy">{t('blog.modalCta')}</p>
+        <a
+          href={waLink(settings.pesanWa.artikel, settings.whatsapp)}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 bg-ladoob-agent hover:bg-[#164237] text-white text-sm font-semibold px-5 py-3 rounded-lg transition-colors shrink-0"
+        >
+          <Icon name="message-circle" class="w-4 h-4" />
+          <span>{page.labelCta}</span>
+        </a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

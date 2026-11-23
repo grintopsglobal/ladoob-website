@@ -1,0 +1,15 @@
+order: 1
+aksen: "navy"
+nama: "Ladoob Core"
+namaArab: ""
+peran: "Web untuk owner dan kantor pusat"
+labelFooter: "Ladoob Core"
+judul: "Pusat kendali untuk owner dan tim operasional"
+subjudul: "Produk wisata dan Umrah, biaya vendor, arus kas, serta kinerja cabang dan agen dipantau dari satu dasbor."
+fitur:
+  - "Kalkulator HPP dan harga jual multi-mata uang (IDR, USD, SAR) dengan kunci margin otomatis"
+  - "Manifest, roomlist hotel, pembagian bus, dan status dokumen paspor atau visa"
+  - "Akuntansi dan arus kas: piutang jamaah, utang vendor, serta laba rugi per keberangkatan"
+  - "Stok seat dan inventaris perlengkapan seperti koper dan ihram yang langsung terbarui"
+highlightJudul: "Satu perubahan, semua aplikasi ikut terbarui"
+highlightDeskripsi: "Jadwal penerbangan atau nomor kamar yang diubah di Ladoob Core langsung muncul di Compass, Masar, dan Agent tanpa input ulang."

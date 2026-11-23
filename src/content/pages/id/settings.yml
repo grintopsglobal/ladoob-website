@@ -1,0 +1,62 @@
+type: settings
+whatsapp: "6285161364811"
+email: info@grintecs.com
+websiteResmi: ladoob.my.id
+deskripsiFooter: "Sistem manajemen untuk biro perjalanan wisata dan penyelenggara Umrah dan Haji: dasbor web untuk kantor pusat, serta aplikasi untuk wisatawan, jamaah, dan agen."
+taglineFooter: Beyond Smart Travel
+copyright: Dirancang, dikembangkan oleh Grintec. © {tahun} Ladoob. Hak cipta dilindungi undang-undang.
+seo:
+  title: Ladoob | Sistem manajemen travel wisata dan Umrah
+  description: "Ladoob Core, Compass, Masar (مسار), dan Agent: satu sistem untuk kantor pusat, wisatawan, jamaah, dan agen travel Anda."
+  ogImage: ""
+pesanWa:
+  umum: Halo tim Ladoob, saya ingin menjadwalkan demo platform Ladoob.
+  melayang: Halo tim Ladoob, saya ingin menjadwalkan demo platform Ladoob.
+  hero: Halo tim Ladoob, saya ingin menjadwalkan demo Ladoob Core, Compass, Masar, dan Agent.
+  banner: Halo tim Ladoob, saya ingin menjadwalkan demo lengkap Ladoob.
+  artikel: Halo tim Ladoob, saya baru membaca artikel di website Ladoob dan ingin menjadwalkan demo.
+  pilar: Halo tim Ladoob, saya ingin menjadwalkan demo {nama}.
+  paket: Halo tim Ladoob, saya ingin menjadwalkan demo untuk paket {nama} ({harga}, lisensi sekali bayar).
+klaim:
+  - klaim: Metrik 75% lebih cepat menyusun manifest
+    lokasi: Beranda > Manfaat > metrik 1
+    terverifikasi: false
+  - klaim: Metrik 0% kebocoran selisih kurs & HPP
+    lokasi: Beranda > Manfaat > metrik 2
+    terverifikasi: false
+  - klaim: Metrik 10x kapasitas jaringan agen
+    lokasi: Beranda > Manfaat > metrik 3
+    terverifikasi: false
+  - klaim: Metrik 100% kepemilikan lisensi
+    lokasi: Beranda > Manfaat > metrik 4
+    terverifikasi: false
+  - klaim: SLA uptime 99.9% & Dedicated Account Manager
+    lokasi: Paket > Enterprise
+    terverifikasi: false
+  - klaim: Server online 24/7 dan backup database harian
+    lokasi: FAQ > skema One-Time
+    terverifikasi: false
+  - klaim: Durasi implementasi 3–7 hari kerja / 2–5 minggu
+    lokasi: FAQ > waktu implementasi
+    terverifikasi: false
+  - klaim: '"Sangat terjamin", isolasi database, enkripsi SSL/TLS end-to-end, RBAC, audit trail, backup harian'
+    lokasi: FAQ > keamanan data
+    terverifikasi: false
+  - klaim: Aplikasi tersedia di Play Store / App Store
+    lokasi: Paket > Business, Custom Whitelabel; FAQ > waktu implementasi
+    terverifikasi: false
+  - klaim: Integrasi payment gateway
+    lokasi: Paket > Business
+    terverifikasi: false
+  - klaim: Audio pendamping doa
+    lokasi: Pilar > Masar
+    terverifikasi: false
+  - klaim: Cicilan
+    lokasi: Pilar > Compass
+    terverifikasi: false
+tracking:
+  gscVerification: ""
+  gtmId: ""
+  ga4Id: ""
+  metaPixelId: ""
+  metaTags: []

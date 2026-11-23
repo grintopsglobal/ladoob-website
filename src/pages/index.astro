@@ -1,0 +1,7 @@
+---
+// Root langsung menampilkan homepage bahasa default (GitHub Pages tidak punya redirect server).
+import HomePage from '../components/HomePage.astro';
+import { defaultLang } from '../i18n/ui';
+---
+
+<HomePage lang={defaultLang} />

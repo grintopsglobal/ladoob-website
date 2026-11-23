@@ -1,0 +1,18 @@
+nama: "Business"
+order: 2
+gaya: "sorot"
+pita: "Rekomendasi"
+deskripsi: "Untuk biro wisata dan travel Umrah yang sedang berkembang."
+labelHarga: "Lisensi sekali bayar"
+harga: "Rp 29.000.000"
+labelMaintenance: "Cloud dan maintenance"
+maintenance: "Rp 6.000.000 / tahun"
+catatanMaintenance: "(gratis tahun pertama)"
+warnaCatatan: "hijau"
+fitur:
+  - "Ladoob Core Web, admin dan role akses tanpa batas"
+  - "Aplikasi Android/iOS **Ladoob Compass atau Masar**"
+  - "**Ladoob Agent** untuk jaringan mitra dan affiliator"
+  - "Kalkulator HPP dan multi-mata uang (IDR, USD, SAR)"
+  - "Integrasi payment gateway dan dukungan WhatsApp prioritas"
+pesanWa: ""

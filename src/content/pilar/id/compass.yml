@@ -1,0 +1,15 @@
+order: 2
+aksen: "compass"
+nama: "Ladoob Compass"
+namaArab: ""
+peran: "Aplikasi untuk wisatawan umum"
+labelFooter: "Ladoob Compass"
+judul: "Pendamping perjalanan untuk wisatawan"
+subjudul: "Dipakai untuk open trip, private tour, MICE, dan corporate incentive."
+fitur:
+  - "Itinerary harian dengan peta lokasi, titik kumpul, dan kontak tour leader"
+  - "Dompet dokumen perjalanan: e-ticket pesawat, voucher hotel, asuransi, dan visa"
+  - "Pemesanan paket mandiri dan jadwal pembayaran cicilan yang bisa dilacak"
+  - "Notifikasi perubahan jadwal dan pengumuman untuk rombongan"
+highlightJudul: "PDF tidak lagi tercecer di grup chat"
+highlightDeskripsi: "Wisatawan cukup membuka satu aplikasi berlogo travel Anda untuk melihat jadwal tur dan tiket perjalanan, termasuk saat sinyal terbatas."

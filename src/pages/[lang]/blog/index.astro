@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogCard from '../../../components/BlogCard.astro';
+import { staticLangPaths } from '../../../i18n/utils';
+import type { Lang } from '../../../i18n/ui';
+import { blogByLang, getPage } from '../../../lib/content';
+
+export const getStaticPaths = staticLangPaths;
+const lang = Astro.params.lang as Lang;
+const page = await getPage(lang, 'home');
+const artikel = await blogByLang(lang);
+---
+
+<BaseLayout lang={lang} title={page.blog.judul} description={page.blog.deskripsi}>
+  <section class="py-16 sm:py-24 bg-white" style="overflow-x: clip;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl mb-12">
+        <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-ladoob-navy tracking-tight mb-3">{page.blog.judul}</h1>
+        <p class="text-base sm:text-lg text-slate-600 leading-relaxed">{page.blog.deskripsi}</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {artikel.map((a) => <BlogCard lang={lang} artikel={a.data} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,18 @@
+nama: "Starter"
+order: 1
+gaya: "biasa"
+pita: ""
+deskripsi: "Untuk travel rintisan dan agensi baru."
+labelHarga: "Lisensi sekali bayar"
+harga: "Rp 14.500.000"
+labelMaintenance: "Cloud dan maintenance"
+maintenance: "Rp 3.600.000 / tahun"
+catatanMaintenance: "(gratis tahun pertama)"
+warnaCatatan: "hijau"
+fitur:
+  - "Ladoob Core Web, hingga 3 akun admin"
+  - "Manajemen paket dan manifest dasar"
+  - "Laporan keuangan dan arus kas standar"
+  - "Kapasitas hingga **25 agen aktif**"
+  - "Dukungan teknis lewat email dan WhatsApp pada jam kerja"
+pesanWa: ""
